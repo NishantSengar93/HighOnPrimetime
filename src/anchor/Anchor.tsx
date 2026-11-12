@@ -5,6 +5,7 @@ import { solveArm, type Vec } from "./ik";
 import type { ArmSpec, ExpressionSpec, MouthShape, PoseSpec } from "../schemas/anchor";
 import { Head } from "./parts/Head";
 import { Arm, Leg, Torso } from "./parts/Body";
+import type { View } from "./parts/Hair";
 
 export type AnchorProps = {
   pose: PoseSpec;
@@ -23,13 +24,15 @@ export type AnchorProps = {
    */
   pass?: "all" | "main" | "overDesk";
   showLegs?: boolean;
+  /** Front (default), three-quarter or side profile. Both turned views face the viewer's right. */
+  view?: View;
 };
 
-const SHOULDER_L: Vec = [-RIG.shoulderX, RIG.shoulderY];
-const SHOULDER_R: Vec = [RIG.shoulderX, RIG.shoulderY];
+/** How much the body narrows when the anchor turns. */
+const TURN: Record<View, number> = { front: 1, threeQuarter: 0.84, side: 0.42 };
 
-const ArmFromSpec: React.FC<{ spec: ArmSpec; side: -1 | 1 }> = ({ spec, side }) => {
-  const shoulder = side === -1 ? SHOULDER_L : SHOULDER_R;
+const ArmFromSpec: React.FC<{ spec: ArmSpec; side: -1 | 1; turn: number }> = ({ spec, side, turn }) => {
+  const shoulder: Vec = [side * RIG.shoulderX * turn + (1 - turn) * 14, RIG.shoulderY];
   const s = solveArm(shoulder, spec.target, side, spec.elbow);
   return (
     <Arm
@@ -70,7 +73,11 @@ export const Anchor: React.FC<AnchorProps> = ({
   headBob = 0,
   pass = "all",
   showLegs,
+  view = "front",
 }) => {
+  const turn = TURN[view];
+  const hipX = RIG.hipX * turn;
+  const toe = (s: -1 | 1): -1 | 1 => (view === "front" ? s : 1);
   const legs = (showLegs ?? true) && !pose.seated;
   const drop = pose.seated ? RIG.seatedDrop : 0;
   const fs = 1 + pose.forward * 0.1;
@@ -78,8 +85,8 @@ export const Anchor: React.FC<AnchorProps> = ({
 
   const arms = (layer: ArmSpec["layer"]) => (
     <>
-      {pose.armL.layer === layer && <ArmFromSpec spec={pose.armL} side={-1} />}
-      {pose.armR.layer === layer && <ArmFromSpec spec={pose.armR} side={1} />}
+      {pose.armL.layer === layer && <ArmFromSpec spec={pose.armL} side={-1} turn={turn} />}
+      {pose.armR.layer === layer && <ArmFromSpec spec={pose.armR} side={1} turn={turn} />}
     </>
   );
 
@@ -106,11 +113,11 @@ export const Anchor: React.FC<AnchorProps> = ({
     <g transform={`translate(${pose.dx} ${pose.dy + drop})`}>
       {pass !== "overDesk" && legs && (
         <g>
-          <g transform={`translate(${-RIG.hipX} ${RIG.neckY + RIG.hipY})`}>
-            <Leg angle={pose.legL} side={-1} />
+          <g transform={`translate(${-hipX} ${RIG.neckY + RIG.hipY})`}>
+            <Leg angle={pose.legL * turn} side={-1} toe={toe(-1)} />
           </g>
-          <g transform={`translate(${RIG.hipX} ${RIG.neckY + RIG.hipY})`}>
-            <Leg angle={pose.legR} side={1} />
+          <g transform={`translate(${hipX} ${RIG.neckY + RIG.hipY})`}>
+            <Leg angle={pose.legR * turn} side={1} toe={toe(1)} />
           </g>
         </g>
       )}
@@ -121,11 +128,11 @@ export const Anchor: React.FC<AnchorProps> = ({
           ) : (
             <>
               {arms("back")}
-              <Torso breath={breath} />
+              <Torso breath={breath} turn={turn} />
               <g
                 transform={`translate(${pose.headDx} ${pose.headDy + headBob}) rotate(${pose.headTilt}) translate(0 ${RIG.headCenterY})`}
               >
-                <Head expression={expression} mouth={mouth} blink={blink} hairBounce={headBob} />
+                <Head expression={expression} mouth={mouth} blink={blink} hairBounce={headBob} view={view} />
               </g>
               {arms("front")}
               {pose.effects.includes("motionTicks") && effects}

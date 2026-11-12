@@ -41,6 +41,7 @@ public/               fonts, audio, graphics (Phase 3+)
 | ID | What |
 |---|---|
 | `ExpressionSheet` | 12 expressions (model sheet) |
+| `TurnaroundSheet` | front / three-quarter / side views |
 | `PoseSheet` | 10 poses, desk poses on the master desk |
 | `NewsroomEmpty` | empty set |
 | `StudioPreview` | anchor in the set; props: `pose`, `expression`, `mood` (Zod-validated) |

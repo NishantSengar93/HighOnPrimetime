@@ -5,7 +5,7 @@ import type { BrowSpec, Extra, MouthShape } from "../../schemas/anchor";
 
 /* ------------------------------------------------------------------ brows */
 
-const Brow: React.FC<{ spec: BrowSpec; side: -1 | 1 }> = ({ spec, side }) => {
+export const Brow: React.FC<{ spec: BrowSpec; side: -1 | 1 }> = ({ spec, side }) => {
   const cx = 62 * side;
   const cy = RIG.browY + spec.y;
   const w = 96;
@@ -153,7 +153,7 @@ const Ticks: React.FC<{ cx: number; cy: number; from: number; to: number; r: num
 
 const EXTRAS: Record<Extra, React.ReactNode> = {
   anger: (
-    <g transform="translate(-118 -150)" stroke={C.anger} strokeWidth={9} fill="none" strokeLinecap="round">
+    <g transform="translate(-112 -70)" stroke={C.anger} strokeWidth={9} fill="none" strokeLinecap="round">
       <path d="M -20 -6 Q -6 -6 -6 -20" />
       <path d="M 6 -20 Q 6 -6 20 -6" />
       <path d="M 20 6 Q 6 6 6 20" />
@@ -162,12 +162,12 @@ const EXTRAS: Record<Extra, React.ReactNode> = {
   ),
   zzz: (
     <g>
-      <Z x={150} y={-150} s={26} />
-      <Z x={186} y={-200} s={36} />
+      <Z x={196} y={-70} s={26} />
+      <Z x={232} y={-124} s={36} />
     </g>
   ),
   question: (
-    <g transform="translate(190 -190)">
+    <g transform="translate(244 -100)">
       <path
         d="M -18 -18 Q -18 -42 6 -42 Q 30 -42 30 -20 Q 30 -4 8 6 L 8 20"
         fill="none"
@@ -189,11 +189,16 @@ const EXTRAS: Record<Extra, React.ReactNode> = {
   ),
   laughTicks: (
     <g>
-      <Ticks cx={0} cy={0} from={-30} to={10} r={185} />
-      <Ticks cx={0} cy={0} from={170} to={210} r={185} />
+      <Ticks cx={0} cy={0} from={-12} to={28} r={196} />
+      <Ticks cx={0} cy={0} from={152} to={192} r={196} />
     </g>
   ),
-  shockTicks: <Ticks cx={0} cy={-20} from={-75} to={-35} r={215} />,
+  shockTicks: (
+    <g>
+      <Ticks cx={0} cy={-40} from={-30} to={6} r={226} />
+      <Ticks cx={0} cy={-40} from={174} to={210} r={226} />
+    </g>
+  ),
   sweat: (
     <path
       d="M 150 -60 C 140 -40, 136 -20, 150 -10 C 164 -20, 160 -40, 150 -60 Z"

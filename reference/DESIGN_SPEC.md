@@ -85,15 +85,17 @@ backgrounds**; cream `#FDF4E3` is used only on reference/model sheets. Character
   corners, pupils slightly unfocused (drifting apart), faint vein flicks, soft under-eye bags.
   Slow deliberate blinks (≈ 8 frames down, 4–8 hold, 9–13 up). Vacant, unimpressed.
 
-### 2.3 Hair (C1 — neatly combed, stylised)
-- Colour: `#2A1D15` base, `#4A3426` comb-line highlights, `#110D0A` shadow.
-- **Neat side-combed prime-time coif**, not wind-swept: sharp side parting on the viewer's left,
-  the whole mass swept across to the viewer's right with **exaggerated, lacquered volume** (a
-  rigid swoop rising ~0.3 head above the skull), tidy short sides, small sideburns. A few clean
-  comb lines follow the sweep. It should look like a man who takes his hair very seriously.
-- One fixed silhouette for every pose and expression (C-locked). Built as `hair_back` (behind
-  skull) and `hair_front` (swoop + fringe edge) so it can lag 1–2 frames on head moves without
-  changing shape.
+### 2.3 Hair (hair redesign — supersedes the combed coif)
+- Colour: near-black `#16141A`, subtle charcoal highlights `#3A3842`, crease lines `#050506`.
+- **Tall, messy, upward hair**: five chunky, uneven locks rising from the crown in different
+  upward directions, plus a small loose tuft on each side. The tallest lock is an untidy quiff
+  that splits and curls over to the right. Rounded tips — cartoon, never anime-sharp; not a
+  mohawk (full width of the head), not combed, not slicked, nothing swept across the forehead.
+  Short uneven fringe at the hairline.
+- Rises ~245 rig units above the skull (≈ 0.8 skull). The upward silhouette is the anchor's main
+  recognition feature.
+- The same lock set is used in **front, three-quarter and side** views (`src/anchor/parts/Hair.tsx`),
+  so the silhouette reads identically from every angle.
 
 ### 2.4 Outfit
 | Part | Colour | Notes |
@@ -115,8 +117,9 @@ Pivots: neck (head tilt/bob), shoulders, elbows, wrists, hips. Hands swap betwee
 `rest / point / open_palm / fist / face_cover` shapes.
 
 ### 2.6 Views
-Front (default), 3/4 and profile exist in the turnaround. **Phase 2 builds front only**; 3/4 is
-used only via head-turn approximation. Profile deferred.
+Front (default), three-quarter and side profile are built (`view` prop on `Anchor`), both turned
+views facing the viewer's right. Same parts and sizes in every view; only placement and
+horizontal foreshortening change. See `TurnaroundSheet`.
 
 ---
 
@@ -276,7 +279,7 @@ All bundled in `public/fonts/` (no CDN at render time).
 
 | # | Decision |
 |---|---|
-| **C1** Hair | **Neatly combed, stylised.** Sharp side parting, lacquered swoop with exaggerated volume, tidy sides. Not wind-swept. A self-serious prime-time anchor. |
+| **C1** Hair | ~~Neatly combed, stylised.~~ **Superseded by hair redesign:** tall, messy, upward, chunky uneven locks with an untidy quiff (§2.3). |
 | **C2** Eyes | **Real eyes, no glasses or eyewear.** Pink half-lidded look with visible whites and pupils where appropriate. |
 | **C3** Default look | **Subtly pink, droopy, half-lidded** = signature default: sleep-deprived, vacant, mildly spaced-out; slow blinks, delayed reactions. `bloodshot` stays only as an optional extreme reaction — **no tongue-out, no explicit drug-use read**. Humour from expressions and behaviour only; no paraphernalia or references. |
 | **C4** Desk | **Multicolour, yellow-fronted newsroom desk everywhere**; seated / desk poses use it. |

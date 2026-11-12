@@ -9,11 +9,11 @@ import type { HandShape } from "../../schemas/anchor";
  * Simplified stick-figure torso (revision 1): a small blazer block, shirt V and tie only.
  * Torso-local coordinates: neck = 0,0; hips = 0,150.
  */
-export const Torso: React.FC<{ breath?: number }> = ({ breath = 0 }) => {
+export const Torso: React.FC<{ breath?: number; turn?: number }> = ({ breath = 0, turn = 1 }) => {
   const s = 1 + breath * 0.02;
   const o = { stroke: C.outline, strokeLinejoin: "round" as const };
   return (
-    <g transform={`translate(0 ${RIG.hipY}) scale(${s} ${s}) translate(0 ${-RIG.hipY})`}>
+    <g transform={`translate(${(1 - turn) * 14} ${RIG.hipY}) scale(${s * turn} ${s}) translate(0 ${-RIG.hipY})`}>
       <path
         d="M -40 0 L -58 8 Q -66 12 -64 26 L -56 140 Q -54 150 -44 150 L 44 150 Q 54 150 56 140 L 64 26 Q 66 12 58 8 L 40 0 Z"
         fill={C.blazer}
@@ -158,15 +158,15 @@ export const Arm: React.FC<ArmDrawProps> = (p) => (
 );
 
 /** Stick leg with oversized shoe. Hip at 0,0. */
-export const Leg: React.FC<{ angle: number; side: -1 | 1 }> = ({ angle, side }) => (
+export const Leg: React.FC<{ angle: number; side: -1 | 1; toe?: -1 | 1 }> = ({ angle, side, toe = side }) => (
   <g transform={`rotate(${-angle * side})`}>
     <line x1={0} y1={0} x2={0} y2={RIG.leg} stroke={C.outline} strokeWidth={stroke.legWidth} strokeLinecap="round" />
     <g transform={`translate(0 ${RIG.leg}) rotate(${angle * side})`}>
       <path
-        d={`M ${-side * 8} -6 C ${side * 10} -16, ${side * 46} -12, ${side * 52} 4 C ${side * 54} 14, ${side * 30} 16, 0 14 C ${-side * 14} 12, ${-side * 16} 2, ${-side * 8} -6 Z`}
+        d={`M ${-toe * 8} -6 C ${toe * 10} -16, ${toe * 46} -12, ${toe * 52} 4 C ${toe * 54} 14, ${toe * 30} 16, 0 14 C ${-toe * 14} 12, ${-toe * 16} 2, ${-toe * 8} -6 Z`}
         fill={C.outline}
       />
-      <path d={`M ${side * 22} -6 Q ${side * 36} -6 ${side * 42} 0`} stroke="#FFFFFF" strokeWidth={4} strokeLinecap="round" fill="none" />
+      <path d={`M ${toe * 22} -6 Q ${toe * 36} -6 ${toe * 42} 0`} stroke="#FFFFFF" strokeWidth={4} strokeLinecap="round" fill="none" />
     </g>
   </g>
 );

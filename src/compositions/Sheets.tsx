@@ -29,7 +29,7 @@ export const ExpressionSheet: React.FC = () => (
     <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 10, padding: "10px 40px" }}>
       {EXPRESSION_NAMES.map((name) => (
         <div key={name} style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
-          <svg width={520} height={430} viewBox="-300 -760 600 500">
+          <svg width={480} height={430} viewBox="-340 -910 680 610">
             <Anchor pose={POSES.idle} expression={EXPRESSIONS[name]} />
           </svg>
           <div style={{ ...label, fontSize: 30 }}>{name}</div>
@@ -51,7 +51,7 @@ export const PoseSheet: React.FC = () => (
         const atDesk = DESK_POSES.has(name);
         return (
           <div key={name} style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
-            <svg width={560} height={600} viewBox="-500 -800 1000 1070">
+            <svg width={560} height={600} viewBox="-500 -900 1000 1170">
               {atDesk ? (
                 <>
                   <g transform="translate(0 0)">
@@ -70,6 +70,32 @@ export const PoseSheet: React.FC = () => (
           </div>
         );
       })}
+    </div>
+  </AbsoluteFill>
+);
+
+const VIEWS = [
+  { view: "front", label: "front" },
+  { view: "threeQuarter", label: "three-quarter" },
+  { view: "side", label: "side" },
+] as const;
+
+/** Turnaround: head close-ups + full body in front / three-quarter / side views. */
+export const TurnaroundSheet: React.FC = () => (
+  <AbsoluteFill style={{ backgroundColor: sheetColors.paper }}>
+    <Title text="High on Prime Time — Anchor turnaround" sub="Model sheet · hair redesign · tall messy upward hair" />
+    <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", padding: "0 40px" }}>
+      {VIEWS.map(({ view, label: l }) => (
+        <div key={view} style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
+          <svg width={720} height={720} viewBox="-330 -880 660 660">
+            <Anchor pose={POSES.idle} expression={EXPRESSIONS.neutral} view={view} />
+          </svg>
+          <svg width={600} height={720} viewBox="-330 -820 660 860">
+            <Anchor pose={POSES.idle} expression={EXPRESSIONS.neutral} view={view} />
+          </svg>
+          <div style={{ ...label, fontSize: 34 }}>{l}</div>
+        </div>
+      ))}
     </div>
   </AbsoluteFill>
 );
