@@ -1,10 +1,13 @@
-# Bawalnama — Visual Design Specification (DRAFT v0.1, awaiting approval)
+# High on Prime Time — Visual Design Specification (v0.2, decisions locked 2026-11-12)
+
+> Working channel name: **High on Prime Time** (replaces "Bawalnama"). No logo or wordmark yet — all
+> branding areas stay blank. Asset filenames in `reference/` keep their original names.
 
 Source of truth: the reference images in this folder. They are **guidance**, not assets to paste into
 videos. Everything below will be rebuilt as original, layered, editable SVG.
 
-Status: **DRAFT — no final SVG artwork will be built until this is approved and the open
-conflicts in §9 are resolved.**
+Status: **APPROVED v0.2.** Conflicts C1–C8 are resolved in §9; where an earlier section and §9
+disagree, §9 wins.
 
 ---
 
@@ -33,8 +36,10 @@ Two related but distinct style layers exist in the references:
 | **Characters + graphics** | Hand-inked cartoon. Bold black outline with slight taper, flat fills, minimal shading (one darker tone on blazer folds), warm cream paper background `#FDF4E3`. Comic accents: speed ticks, `!`, `?`, `zZ`, anger vein, sweat/tear drops. |
 | **Newsroom** | Flat pop-art vector. Saturated blues/reds/yellows/purples, thick dark-navy outlines, glossy diagonal highlights on screens, simple radial glows on lights. No texture. |
 
-Rule: characters keep their ink style on top of the pop-art set. Character outline is black
-(`#0A0A0A`); set outlines are dark navy (`#151A51`) so the anchor always reads as "foreground".
+Rule (C8): the character is **unified with the pop-art set** — same bold-outline, flat-fill vector
+construction, no paper texture, no cream background. Character assets have **transparent
+backgrounds**; cream `#FDF4E3` is used only on reference/model sheets. Character outline stays black
+(`#0A0A0A`); set outlines are dark navy (`#151A51`) so the anchor always reads as foreground.
 
 **Line weights** (at 1080×1920 final, anchor head ≈ 330 px wide):
 
@@ -57,24 +62,34 @@ Rule: characters keep their ink style on top of the pop-art set. Character outli
 - Hair adds ~0.35 head above the skull and spills outward ~0.2 head on each side.
 - Torso (blazer): ~0.75 head tall, ~0.7 head wide, short boxy blazer ending at the hip.
 - Legs: ~0.9 head, thin black sticks, feet close together.
-- Arms: thin black sticks, hands reach mid-thigh at rest.
+- Arms: thin navy blazer sleeves (black outline) ending in black gloved hands; hands reach the
+  hip/upper thigh at rest.
+- **Stick-figure rule (locked):** oversized head, tiny torso, thin limbs. Never realistic human
+  proportions, in any pose.
 
 ### 2.2 Head & face
 - Skin: `#FFEDD9` (cream-peach), flat.
-- **Eyes (baseline)**: two wide half-ovals that meet at the nose bridge, filled pink-red
-  `#FC8A7E` with a lighter inner tone and faint red vein lines, heavy flat upper lid line
-  cutting across the top third, small black pupil sitting under the lid. Reads as
-  half-closed, unimpressed. ⚠ see conflict C2/C3.
+- **Eyes (baseline, C2/C3)**: his real eyes — **no glasses or eyewear, ever**. Two wide ovals that
+  meet at the nose bridge. Signature default = **subtly pink, droopy, half-lidded**: off-white
+  sclera `#FFF4EE` washed with soft pink `#F9A99C` toward the rims, a heavy upper lid covering
+  ~45%, small black pupil tucked just under the lid line, two or three very faint vein flicks.
+  Reads as perpetually sleep-deprived, vacant, mildly spaced-out — never "stoned".
+- **Blinks**: slow (6–8 frame close, 2–4 frame hold, 6–8 frame open), every 3–6 s; reactions
+  land 4–8 frames late (delayed-reaction gag).
 - **Brows**: thick black rectangles, nearly flat, slight inward angle — the main acting tool.
 - **Nose**: none (implied by eye bridge).
 - **Mouth (neutral)**: short flat line, slightly downturned. No lips.
 - **Ears**: small, mostly hidden by hair.
 
-### 2.3 Hair ⚠ see conflict C1
-- Colour: `#2A1D15` base, `#110D0A` shadow strands.
-- Shape in references: voluminous, messy, wind-swept spikes, side-swept fringe over the
-  forehead on the viewer's left, tufts flaring out at the sides. Built as 3 layers
-  (back mass / side tufts / front fringe) so it can bounce on head motion.
+### 2.3 Hair (C1 — neatly combed, stylised)
+- Colour: `#2A1D15` base, `#4A3426` comb-line highlights, `#110D0A` shadow.
+- **Neat side-combed prime-time coif**, not wind-swept: sharp side parting on the viewer's left,
+  the whole mass swept across to the viewer's right with **exaggerated, lacquered volume** (a
+  rigid swoop rising ~0.3 head above the skull), tidy short sides, small sideburns. A few clean
+  comb lines follow the sweep. It should look like a man who takes his hair very seriously.
+- One fixed silhouette for every pose and expression (C-locked). Built as `hair_back` (behind
+  skull) and `hair_front` (swoop + fringe edge) so it can lag 1–2 frames on head moves without
+  changing shape.
 
 ### 2.4 Outfit
 | Part | Colour | Notes |
@@ -101,23 +116,26 @@ used only via head-turn approximation. Profile deferred.
 
 ---
 
-## 3. Expressions (from `expressions/anchor-expression-sheet-12.jpg`)
+## 3. Expressions (from `expressions/anchor-expression-sheet-12.jpg`, revised per C3/C5)
 
 Grid positions are row-col.
 
 | ID | Sheet | Eyes | Brows | Mouth | Extras |
 |---|---|---|---|---|---|
-| `neutral` (= deadpan base) | 1-1, 3-4 | pink, half lid | flat heavy | short flat line | — |
+| `neutral` (= deadpan base) | 1-1 | subtle pink, half lid, vacant stare | flat heavy | short flat line | — |
 | `shocked` | 1-2 | **white**, huge round, tiny pupils | raised high | big open "O" with tongue | burst ticks |
 | `angry` | 1-3 | pink, narrowed | steep V | open shout, teeth | red anger vein, red ticks |
 | `sarcastic` | 1-4 | pink, heavy lid, looking aside | one raised | lopsided smirk | — |
 | `sleepy` | 2-1 | closed, pink lids | relaxed | small "o" | `zZ` |
 | `laughing` | 2-2 | closed arcs | raised | huge open grin | ticks both sides |
 | `confused` | 2-3 | **white**, one big one small | one up, one down | small "o" | `?` |
-| `bloodshot` | 2-4 | **huge round pink with veins** | — | manic grin, tongue out | — ⚠ C3 |
+| `bloodshot` *(optional extreme)* | 2-4 | wide-open, strongly pink, visible veins, tiny pupils | raised, uneven | stunned flat grimace — **no tongue, no manic grin** | — |
 | *(extra)* `crying` | 3-1 | squeezed shut | sad | wailing open | blue tears |
 | *(extra)* `skeptical` | 3-2 | pink half lid | one raised | small frown | — |
 | *(extra)* `scheming` | 3-3 | pink narrowed | steep V | wide toothy grin | — |
+| *(extra)* `smug` | replaces duplicate 3-4 | pink, extra-heavy lids | relaxed, one slightly up | tight self-satisfied closed smile | — |
+
+Total: **12 expressions** (8 required + crying, skeptical, scheming, smug — C5).
 
 Implementation: each expression = a preset of `{eyes, lids, pupils, brows, mouth, extras}`
 parts, so they can be blended/switched per frame.
@@ -137,12 +155,12 @@ Mouth fill `#C8202A`, tongue `#F2626B`, teeth white.
 | `talking` | 1-2 | one hand on chest, other open palm out, mouth moving |
 | `point_left` | 1-3 | lunging, arm fully extended to viewer's left, shouting |
 | `point_camera` | 1-4 | finger toward viewer (foreshortened hand), other hand on hip |
-| `lean_forward` | 1-5 | both hands planted on desk, leaning in, shouting |
+| `lean_forward` | 1-5 | both hands planted on the **multicolour desk** (C4), leaning in, shouting |
 | `shrug` | 2-1 | both palms up, elbows out, motion ticks |
 | `facepalm` | 2-2 | one hand over eyes, other on hip |
-| `desk_bang` | 2-3 | fist slams desk, yellow impact star |
+| `desk_bang` | 2-3 | fist slams the **multicolour desk** (C4), yellow impact star |
 | `laugh` | 2-4 | doubled over, hand on belly, eyes shut |
-| `deadpan` | 2-5 | seated in office chair, arms + legs crossed |
+| `deadpan` | 2-5 | **seated behind the multicolour newsroom desk** (C4), arms crossed, flat stare |
 
 Bonus attitude poses from the turnaround sheet (reclined hands-behind-head, hands-on-hips smug,
 grinning point) — candidates for later.
@@ -162,7 +180,7 @@ shots.
 | LED row | 350–420 | 5 blue LED spot bulbs |
 | **LED screen** | 440–960 | large 16:9 screen, red→blue double bezel with yellow corner tabs, dark navy `#151A51` panel — **per-episode content goes here** |
 | Back wall | 960–1150 | purple step panels; side monitors (cropped at frame edges), plants, small desk monitors |
-| **Desk** | 1150–1580 | curved oval desk: glass top, red/blue/yellow/orange side stripes, large **yellow front panel** (branding slot) |
+| **Desk** | 1150–1580 | curved oval desk: glass top, red/blue/yellow/orange side stripes, large **yellow front panel** (blank branding slot) |
 | Floor | 1580–1920 | blue reflective tile grid with set reflections |
 
 ### 5.2 Palette
@@ -184,9 +202,11 @@ shots.
 side_monitors (content slots) · plants · desk_back · [ANCHOR] · desk_front (branding slot) ·
 floor + reflections · fg_vignette`
 
-### 5.4 Additions not in the reference (required by brief)
-- **Bawalnama branding**: logo on desk front panel + small bug on screen bezel. No logo
-  reference supplied → ⚠ C6.
+### 5.4 Branding areas (C6 — all blank for now)
+- Desk front panel, LED screen and screen-bezel corner are **reserved branding slots, left
+  blank** (plain colour fills). No logo, wordmark, channel name or any readable text is drawn
+  into the permanent set. The final identity is added later through these slots.
+- The desk from this set is the **master desk** for every pose and scene (C4).
 - Configurable: screen content (image / video / headline card), side-monitor content, light
   colour mood (normal / breaking-red / night).
 
@@ -245,20 +265,27 @@ All bundled in `public/fonts/` (no CDN at render time).
 
 ---
 
-## 9. Conflicts & open questions — need your decision
+## 9. Locked decisions (2026-11-12)
 
-| # | Conflict | Options |
-|---|---|---|
-| **C1** | **Hair**: original brief says *"neatly combed dark hair"*; every reference shows **messy, wind-swept spiky hair**. | (a) follow references — messy (my recommendation); (b) neat combed |
-| **C2** | **Eyes — glasses or eyes?** The pink half-ovals meet at the bridge like **tinted glasses**, yet in `shocked`/`confused` they become plain white eyes with no frames. | (a) they are eyes (pink = bloodshot/tired), no glasses (my reading); (b) pink-tinted glasses that come off / change |
-| **C3** | **Bloodshot as baseline**: brief lists `bloodshot` as *one of 8 expressions*; references make pink, heavy-lidded eyes the **default look**, and the `bloodshot` sheet face (huge red eyes, tongue out, manic grin) plus the reclined pose read strongly as "stoned". Given the brief bans drug props, do you want that connotation? | (a) keep pink default (signature "sleep-deprived anchor" look), tone down the manic `bloodshot` variant; (b) white default eyes, pink only for `sleepy`/`bloodshot`; (c) keep exactly as references |
-| **C4** | **Desk design**: newsroom desk is **multicolour with yellow front**; desk in poses sheet is **grey top + red front**. | (a) newsroom desk everywhere (recommended); (b) red/grey desk |
-| **C5** | **Expression count**: sheet has 3 extras (`crying`, `skeptical`, `scheming`). | include them? (recommended: yes, cheap to add) |
-| **C6** | **Branding**: no Bawalnama logo reference. | (a) I design a wordmark proposal for approval; (b) you supply one |
-| **C7** | **Supporting cast** (reporter, neta, corporate, aam aadmi, expert) — not in the original brief. | (a) later phase; (b) include in Phase 2 |
-| **C8** | **Style gap**: characters are ink-on-cream; set is neon pop-art. | (a) keep both as-is, characters pop forward (recommended); (b) push characters toward set palette |
+| # | Decision |
+|---|---|
+| **C1** Hair | **Neatly combed, stylised.** Sharp side parting, lacquered swoop with exaggerated volume, tidy sides. Not wind-swept. A self-serious prime-time anchor. |
+| **C2** Eyes | **Real eyes, no glasses or eyewear.** Pink half-lidded look with visible whites and pupils where appropriate. |
+| **C3** Default look | **Subtly pink, droopy, half-lidded** = signature default: sleep-deprived, vacant, mildly spaced-out; slow blinks, delayed reactions. `bloodshot` stays only as an optional extreme reaction — **no tongue-out, no explicit drug-use read**. Humour from expressions and behaviour only; no paraphernalia or references. |
+| **C4** Desk | **Multicolour, yellow-fronted newsroom desk everywhere**; seated / desk poses use it. |
+| **C5** Expressions | Include crying, skeptical, scheming; the duplicate neutral is replaced by **smug**. 12 total. |
+| **C6** Branding | Working name **High on Prime Time** (replaces Bawalnama). **No wordmark yet**; desk panel, LED screen and all branding areas stay blank. |
+| **C7** Supporting cast | **Later phase.** Anchor only for now; lineup kept as future reference. |
+| **C8** Style | Keep the bright pop-art newsroom; **character unified with it** — bold outlines, flat vector fills, **transparent background**. Cream only on reference sheets. |
 
----
+### Personality (drives every expression and pose choice)
+Default: deadpan, sarcastic, slightly spaced-out. Capable of an instant switch into an
+outrageously loud prime-time delivery (shocked / angry / point / desk_bang), then straight back
+to vacant deadpan.
+
+### Composition
+Vertical 9:16 newsroom is the only primary composition. The horizontal set is reference only.
+No permanent channel branding or readable text anywhere in the set.
 
 ## 10. Consistency rules (locked once approved)
 1. Anchor silhouette, proportions, palette and outfit never change per episode.
