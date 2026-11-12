@@ -6,6 +6,7 @@ import type { ArmSpec, ExpressionSpec, MouthShape, PoseSpec } from "../schemas/a
 import { Head } from "./parts/Head";
 import { Arm, Leg, Torso } from "./parts/Body";
 import type { View } from "./parts/Hair";
+import { applyFaceStyle, type FaceStyle } from "./faceStyles";
 
 export type AnchorProps = {
   pose: PoseSpec;
@@ -26,6 +27,8 @@ export type AnchorProps = {
   showLegs?: boolean;
   /** Front (default), three-quarter or side profile. Both turned views face the viewer's right. */
   view?: View;
+  /** Drawing style of the face (default "signature"). */
+  faceStyle?: FaceStyle;
 };
 
 /** How much the body narrows when the anchor turns. */
@@ -74,6 +77,7 @@ export const Anchor: React.FC<AnchorProps> = ({
   pass = "all",
   showLegs,
   view = "front",
+  faceStyle = "signature",
 }) => {
   const turn = TURN[view];
   const hipX = RIG.hipX * turn;
@@ -132,7 +136,7 @@ export const Anchor: React.FC<AnchorProps> = ({
               <g
                 transform={`translate(${pose.headDx} ${pose.headDy + headBob}) rotate(${pose.headTilt}) translate(0 ${RIG.headCenterY})`}
               >
-                <Head expression={expression} mouth={mouth} blink={blink} hairBounce={headBob} view={view} />
+                <Head expression={applyFaceStyle(expression, faceStyle)} mouth={mouth} blink={blink} hairBounce={headBob} view={view} />
               </g>
               {arms("front")}
               {pose.effects.includes("motionTicks") && effects}

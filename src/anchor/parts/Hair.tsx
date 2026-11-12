@@ -1,180 +1,134 @@
 import React from "react";
 import { anchorColors as C, stroke } from "../../theme";
-import { useSafeId } from "../../utils/ids";
 
 /**
- * Hair revision 4: very low volume, oiled, cleanly side-parted.
- * A thin cap hugging the skull (~12 units of volume), a crisp parting on the viewer's left,
- * ~22 comb strands following the combing direction, and an oily gloss band.
- * Head-local coordinates (skull centre = 0,0, radius 150).
+ * Hair revision 5 (after the user's video reference): short spiky navy-black hair.
+ * Flame-like spikes sweeping up and to the right, spikes flicking out at both temples,
+ * a smooth fringe edge high on the forehead and a zig-zag highlight across the top.
+ * Volume ~0.4 skull. Head-local coordinates (skull centre = 0,0, radius 150).
  */
 
 export type View = "front" | "threeQuarter" | "side";
 
-type V2 = [number, number];
-const R = 162; // outer radius of the hair cap
-const CY = 2;
-const onCap = (deg: number, r = R): V2 => [Math.cos((deg * Math.PI) / 180) * r, CY - Math.sin((deg * Math.PI) / 180) * r];
-const arc = (from: number, to: number, n = 28, r = R): V2[] =>
-  Array.from({ length: n + 1 }, (_, i) => onCap(from + ((to - from) * i) / n, r));
-const lerp2 = (a: V2, b: V2, t: number): V2 => [a[0] + (b[0] - a[0]) * t, a[1] + (b[1] - a[1]) * t];
+/** [x, y, cornerRadius, kind] — kind "t" = spike tip, "v" = notch between spikes. */
+type Pt = [number, number, number, ("t" | "v" | "")?];
 
-type Section = { count: number; endFrom: number; endTo: number; bulge: number; from?: [V2, V2] };
-type Spec = {
-  outline: V2[];
-  /** Parting line: from the hairline (a) back to the crown (b). */
-  part: [V2, V2];
-  sections: Section[];
-  /** Gloss band along the cap, as arc angles. */
-  gloss: [number, number];
+/** Spikes over the crown and temples, shared by every view (shifted for turned views). */
+const TOP: Pt[] = [
+  [-168, -10, 6, "t"], // small lock hanging at the left temple
+  [-150, -50, 8, "v"],
+  [-186, -98, 6, "t"], // flick, out-left
+  [-148, -128, 8, "v"],
+  [-160, -196, 7, "t"],
+  [-112, -176, 8, "v"],
+  [-100, -256, 7, "t"],
+  [-56, -208, 8, "v"],
+  [-14, -282, 7, "t"],
+  [10, -220, 8, "v"],
+  [76, -288, 8, "t"], // tallest, leaning up-right
+  [72, -214, 8, "v"],
+  [150, -246, 7, "t"],
+  [124, -176, 8, "v"],
+  [188, -160, 7, "t"], // flick, out-right
+  [150, -120, 8, "v"],
+  [176, -84, 6, "t"],
+];
+
+const shift = (dx: number, sx = 1) => (p: Pt): Pt => [p[0] * sx + dx, p[1], p[2], p[3]];
+
+const FRONT: Pt[] = [
+  [-140, -6, 4],
+  ...TOP,
+  [150, -40, 6],
+  // smooth fringe edge, right → left, high on the forehead
+  [138, -44, 6],
+  [100, -86, 16],
+  [40, -106, 18],
+  [-24, -110, 18],
+  [-86, -98, 16],
+  [-124, -64, 12],
+  [-136, -10, 4],
+];
+
+const THREE_QUARTER: Pt[] = [
+  [-150, 30, 6],
+  ...TOP.map(shift(-14, 0.95)).filter((p) => p[0] < 160 || p[1] < -120),
+  [146, -110, 8],
+  [128, -90, 10],
+  [76, -96, 14],
+  [16, -100, 16],
+  [-46, -96, 16],
+  [-86, -76, 14],
+  [-98, -30, 14],
+  [-104, 30, 6],
+];
+
+const SIDE: Pt[] = [
+  [-118, 70, 8],
+  [-158, 30, 10],
+  ...TOP.map(shift(-22)).filter((p) => p[0] < 150 || p[1] < -140),
+  [150, -118, 8],
+  [168, -84, 6, "t"], // spike over the brow
+  [128, -96, 8],
+  [80, -104, 12],
+  [40, -96, 12],
+  [8, -76, 14],
+  [-16, -30, 12],
+  [-38, 8, 10],
+  [-58, 50, 10],
+  [-84, 72, 8],
+];
+
+const SHAPES: Record<View, Pt[]> = { front: FRONT, threeQuarter: THREE_QUARTER, side: SIDE };
+
+/** Zig-zag highlight across the top (the reference's signature sheen). */
+const ZIGZAG: Record<View, string> = {
+  front: "M -104 -168 L -76 -196 L -62 -174 L -34 -206 L -18 -182 L 10 -214 L 26 -188 L 58 -220",
+  threeQuarter: "M -116 -168 L -88 -196 L -74 -174 L -46 -206 L -30 -182 L -2 -214 L 14 -188 L 46 -220",
+  side: "M -124 -168 L -96 -196 L -82 -174 L -54 -206 L -38 -182 L -10 -214 L 6 -188 L 38 -220",
 };
 
-/** Catmull-Rom through the points → closed cubic Bézier path. */
-const smoothPath = (pts: V2[]) => {
+/** Closed polygon with each corner rounded by a quadratic curve of radius r. */
+const roundedPath = (pts: Pt[]) => {
   const n = pts.length;
-  const p = (i: number) => pts[(i + n) % n];
-  let d = `M ${p(0)[0].toFixed(1)} ${p(0)[1].toFixed(1)}`;
-  for (let i = 0; i < n; i++) {
-    const [p0, p1, p2, p3] = [p(i - 1), p(i), p(i + 1), p(i + 2)];
-    const c1: V2 = [p1[0] + (p2[0] - p0[0]) / 6, p1[1] + (p2[1] - p0[1]) / 6];
-    const c2: V2 = [p2[0] - (p3[0] - p1[0]) / 6, p2[1] - (p3[1] - p1[1]) / 6];
-    d += ` C ${c1[0].toFixed(1)} ${c1[1].toFixed(1)}, ${c2[0].toFixed(1)} ${c2[1].toFixed(1)}, ${p2[0].toFixed(1)} ${p2[1].toFixed(1)}`;
+  const cs = pts.map((_, i) => {
+    const [x, y, r] = pts[i];
+    const [px, py] = pts[(i - 1 + n) % n];
+    const [nx, ny] = pts[(i + 1) % n];
+    const kp = Math.min(r / Math.hypot(px - x, py - y), 0.5);
+    const kn = Math.min(r / Math.hypot(nx - x, ny - y), 0.5);
+    return { a: [x + (px - x) * kp, y + (py - y) * kp], v: [x, y], b: [x + (nx - x) * kn, y + (ny - y) * kn] };
+  });
+  const f = (p: number[]) => `${p[0].toFixed(1)} ${p[1].toFixed(1)}`;
+  let d = `M ${f(cs[0].b)}`;
+  for (let i = 1; i <= n; i++) {
+    const c = cs[i % n];
+    d += ` L ${f(c.a)} Q ${f(c.v)} ${f(c.b)}`;
   }
   return d + " Z";
 };
 
-const SPECS: Record<View, Spec> = {
-  front: {
-    outline: [
-      [-146, 14],
-      ...arc(186, -6),
-      [146, 14],
-      // clean hairline, right → left
-      [136, 12],
-      [134, -46],
-      [112, -92],
-      [60, -110],
-      [0, -114],
-      [-62, -112],
-      [-106, -98],
-      [-130, -56],
-      [-134, 12],
-    ],
-    part: [
-      [-62, -112],
-      [-76, -166],
-    ],
-    sections: [
-      { count: 15, endFrom: 8, endTo: 74, bulge: 34 }, // big side, combed over to the right
-      { count: 7, endFrom: 176, endTo: 128, bulge: 18 }, // small side, combed down-left
-    ],
-    gloss: [128, 58],
-  },
-  threeQuarter: {
-    outline: [
-      [-150, 40],
-      [-160, 0],
-      ...arc(178, 36),
-      [126, -84],
-      [118, -92],
-      [114, -96],
-      [70, -112],
-      [16, -116],
-      [-34, -114],
-      [-78, -98],
-      [-96, -40],
-      [-104, 40],
-    ],
-    part: [
-      [-34, -114],
-      [-52, -168],
-    ],
-    sections: [
-      { count: 14, endFrom: 16, endTo: 72, bulge: 32 },
-      { count: 8, endFrom: 196, endTo: 124, bulge: 22 },
-    ],
-    gloss: [134, 62],
-  },
-  side: {
-    outline: [
-      [-118, 70],
-      [-150, 40],
-      ...arc(200, 44),
-      [118, -104],
-      [100, -104],
-      [60, -104],
-      [20, -96],
-      [-8, -70],
-      [-22, -26],
-      [-40, 6],
-      [-60, 50],
-      [-84, 72],
-    ],
-    part: [
-      [104, -116],
-      [-10, -160],
-    ],
-    sections: [
-      // combed straight back: parallel strands from the front hairline to the back / nape
-      { count: 22, endFrom: 112, endTo: 218, bulge: 14, from: [[104, -120], [-14, -64]] },
-    ],
-    gloss: [150, 70],
-  },
-};
+const BASE_Y = -120;
 
-const strands = (spec: Spec): string[] => {
-  const out: string[] = [];
-  for (const s of spec.sections) {
-    const [a, b] = s.from ?? spec.part;
-    for (let i = 0; i < s.count; i++) {
-      const t = s.count === 1 ? 0 : i / (s.count - 1);
-      const start = lerp2(a, b, t);
-      const end = onCap(s.endFrom + (s.endTo - s.endFrom) * t, R + 6);
-      const mid = lerp2(start, end, 0.5);
-      // bulge away from the skull centre so strands follow the head's curve
-      const len = Math.hypot(mid[0], mid[1] - CY) || 1;
-      const ctrl: V2 = [mid[0] + (mid[0] / len) * s.bulge, mid[1] + ((mid[1] - CY) / len) * s.bulge];
-      out.push(
-        `M ${start[0].toFixed(1)} ${start[1].toFixed(1)} Q ${ctrl[0].toFixed(1)} ${ctrl[1].toFixed(1)} ${end[0].toFixed(1)} ${end[1].toFixed(1)}`,
-      );
-    }
-  }
-  return out;
-};
+/** Short dark notches running in from each gap between spikes. */
+const creases = (pts: Pt[]) =>
+  pts
+    .filter((p) => p[3] === "v")
+    .map(([x, y]) => {
+      const len = Math.hypot(x, y - BASE_Y) || 1;
+      const k = 30 / len;
+      return `M ${x} ${y} L ${x - x * k} ${y - (y - BASE_Y) * k}`;
+    })
+    .join(" ");
 
-export const Hair: React.FC<{ bounce?: number; view?: View }> = ({ view = "front" }) => {
-  const id = useSafeId("hair");
-  const spec = SPECS[view];
-  const shape = smoothPath(spec.outline);
-  const [a, b] = spec.part;
-  const g = arc(spec.gloss[0], spec.gloss[1], 12, R - 22);
-  const glossD = `M ${g.map((p) => `${p[0].toFixed(1)} ${p[1].toFixed(1)}`).join(" L ")}`;
-  const gl = arc(spec.gloss[0] - 14, spec.gloss[0] - 40, 8, R - 20);
-  const glintD = `M ${gl.map((p) => `${p[0].toFixed(1)} ${p[1].toFixed(1)}`).join(" L ")}`;
+export const Hair: React.FC<{ bounce?: number; view?: View }> = ({ bounce = 0, view = "front" }) => {
+  const pts = SHAPES[view];
+  const sy = 1 + Math.max(-0.05, Math.min(0.05, -bounce * 0.006));
   return (
-    <g>
-      <defs>
-        <clipPath id={`${id}-clip`}>
-          <path d={shape} />
-        </clipPath>
-      </defs>
-      <path d={shape} fill={C.hair} />
-      <g clipPath={`url(#${id}-clip)`}>
-        {/* oily sheen */}
-        <path d={glossD} fill="none" stroke={C.hairGloss} strokeWidth={16} strokeLinecap="round" opacity={0.35} />
-        {/* comb strands */}
-        <g fill="none" stroke={C.hairHighlight} strokeWidth={3.4} strokeLinecap="round">
-          {strands(spec).map((d) => (
-            <path key={d} d={d} />
-          ))}
-        </g>
-        {/* specular glint */}
-        <path d={glintD} fill="none" stroke="#FFFFFF" strokeWidth={5} strokeLinecap="round" opacity={0.75} />
-        {/* clean parting */}
-        <line x1={a[0]} y1={a[1]} x2={b[0]} y2={b[1] - 20} stroke={C.skin} strokeWidth={7} strokeLinecap="round" />
-        <line x1={a[0] + 6} y1={a[1]} x2={b[0] + 6} y2={b[1] - 20} stroke={C.hairShadow} strokeWidth={3} strokeLinecap="round" />
-      </g>
-      <path d={shape} fill="none" stroke={C.outline} strokeWidth={stroke.silhouette} strokeLinejoin="round" />
+    <g transform={`translate(0 ${BASE_Y}) scale(1 ${sy}) translate(0 ${-BASE_Y})`}>
+      <path d={roundedPath(pts)} fill={C.hair} stroke={C.outline} strokeWidth={stroke.silhouette} strokeLinejoin="round" />
+      <path d={ZIGZAG[view]} fill="none" stroke={C.hairHighlight} strokeWidth={7} strokeLinejoin="miter" strokeLinecap="round" />
+      <path d={creases(pts)} fill="none" stroke={C.hairShadow} strokeWidth={5} strokeLinecap="round" />
     </g>
   );
 };

@@ -13,9 +13,10 @@ export const Brow: React.FC<{ spec: BrowSpec; side: -1 | 1 }> = ({ spec, side })
   const outer = side * (w / 2);
   // thick block, slightly heavier at the inner end
   const a = spec.arch;
+  const t = spec.weight;
   const d =
-    `M ${inner} -9 Q 0 ${-9 - a} ${outer} -6 ` +
-    `L ${outer} 6 Q 0 ${9 - a} ${inner} 10 Z`;
+    `M ${inner} ${-9 * t} Q 0 ${-9 * t - a} ${outer} ${-6 * t} ` +
+    `L ${outer} ${6 * t} Q 0 ${9 * t - a} ${inner} ${10 * t} Z`;
   return (
     <g transform={`translate(${cx} ${cy}) rotate(${spec.angle * side})`}>
       <path d={d} fill={C.outline} stroke={C.outline} strokeWidth={4} strokeLinejoin="round" />

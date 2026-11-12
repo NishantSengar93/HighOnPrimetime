@@ -24,6 +24,10 @@ export const eyeSchema = z.object({
   unfocus: z.number().min(0).max(1).default(0),
   /** 0..1 strength of the sleep-deprived under-eye bags. */
   bags: z.number().min(0).max(1).default(0),
+  /** Horizontal size multiplier (tall oval eyes < 1). */
+  width: z.number().min(0.5).max(1.5).default(1),
+  /** 0..1 thick upper lid / lash line drawn over the top of the eye. */
+  lash: z.number().min(0).max(1).default(0),
 });
 export type EyeSpec = z.infer<typeof eyeSchema>;
 
@@ -34,6 +38,8 @@ export const browSchema = z.object({
   angle: z.number().default(4),
   /** 0 = flat bar, positive = arched. */
   arch: z.number().default(0),
+  /** Thickness multiplier (1 = heavy block, ~0.55 = slim arched brow). */
+  weight: z.number().min(0.3).max(1.5).default(1),
 });
 export type BrowSpec = z.infer<typeof browSchema>;
 

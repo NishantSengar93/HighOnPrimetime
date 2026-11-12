@@ -4,12 +4,12 @@
  */
 export const anchorColors = {
   outline: "#0A0A0A",
-  skin: "#FFEDD9",
-  skinShade: "#F6D9C2",
-  hair: "#141217",
-  hairHighlight: "#6C6C7E",
+  skin: "#F4F6FA",
+  skinShade: "#C9D2E2",
+  hair: "#1B2238",
+  hairHighlight: "#5A6890",
   hairGloss: "#9AA6C4",
-  hairShadow: "#000000",
+  hairShadow: "#070A14",
   sclera: "#FFF6F0",
   eyePink: "#F7A093",
   eyeBloodshot: "#F1675C",

@@ -20,7 +20,7 @@ export const Eye: React.FC<Props> = ({ spec, side, blink = 0 }) => {
   const id = useSafeId("eye");
   const cx = RIG.eyeX * side;
   const cy = RIG.eyeY;
-  const rx = RIG.eyeRx;
+  const rx = RIG.eyeRx * spec.width;
   const ry = RIG.eyeRy * spec.roundness;
   const t = spec.tint;
   // t=0.35 (signature default) gives a visible but soft pink wash; t=1 is full bloodshot.
@@ -145,6 +145,15 @@ export const Eye: React.FC<Props> = ({ spec, side, blink = 0 }) => {
       <g clipPath={`url(#${id}-below)`}>
         <ellipse cx={0} cy={0} rx={rx} ry={ry} fill="none" stroke={C.outline} strokeWidth={stroke.feature} />
       </g>
+      {spec.lash > 0 && open > 0.06 && (
+        <g fill="none" stroke={C.outline} strokeLinecap="round">
+          <path
+            d={`M ${-rx * 1.02} ${-ry * 0.05} A ${rx * 1.02} ${ry * 1.02} 0 0 1 ${rx * 1.02} ${-ry * 0.05}`}
+            strokeWidth={stroke.feature + 5 * spec.lash}
+            transform={`rotate(${tilt} 0 0)`}
+          />
+        </g>
+      )}
       {spec.bags > 0 && (
         <path
           d={`M ${-rx * 0.62} ${ry + 9} Q 0 ${ry + 22} ${rx * 0.62} ${ry + 9}`}

@@ -13,8 +13,10 @@ export const DEFAULT_EYE: EyeSpec = {
   lidTilt: -7,
   unfocus: 0.55,
   bags: 0.7,
+  width: 1,
+  lash: 0,
 };
-export const DEFAULT_BROW: BrowSpec = { y: 0, angle: 4, arch: 0 };
+export const DEFAULT_BROW: BrowSpec = { y: 0, angle: 4, arch: 0, weight: 1 };
 
 const eye = (p: Partial<EyeSpec> = {}): EyeSpec => ({ ...DEFAULT_EYE, ...p });
 const brow = (p: Partial<BrowSpec> = {}): BrowSpec => ({ ...DEFAULT_BROW, ...p });

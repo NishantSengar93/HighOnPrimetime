@@ -16,6 +16,8 @@ const lerpEye = (a: EyeSpec, b: EyeSpec, t: number): EyeSpec => {
     lidTilt: lerp(a.lidTilt, b.lidTilt, t),
     unfocus: lerp(a.unfocus, b.unfocus, t),
     bags: lerp(a.bags, b.bags, t),
+    width: lerp(a.width, b.width, t),
+    lash: lerp(a.lash, b.lash, t),
   };
 };
 
@@ -23,6 +25,7 @@ const lerpBrow = (a: BrowSpec, b: BrowSpec, t: number): BrowSpec => ({
   y: lerp(a.y, b.y, t),
   angle: lerp(a.angle, b.angle, t),
   arch: lerp(a.arch, b.arch, t),
+  weight: lerp(a.weight, b.weight, t),
 });
 
 /** Smooth expression transition: brows/lids/gaze blend, mouth + extras switch at 40%. */

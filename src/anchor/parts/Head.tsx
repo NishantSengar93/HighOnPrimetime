@@ -58,10 +58,10 @@ export const Head: React.FC<Props> = ({ expression, mouth, blink = 0, hairBounce
       </defs>
       <ellipse cx={0} cy={0} rx={RIG.skullR + 2} ry={RIG.skullR - 2} fill={C.skin} stroke={C.outline} strokeWidth={stroke.silhouette} />
       {/* soft chin shade, kept inside the skull in turned views */}
+      {/* cool crescent shading on the lower right, kept inside the skull */}
       <g clipPath={`url(#${id}-skull)`}>
-        <g transform={`translate(${L.chinX} 0)`}>
-          <path d="M -110 100 Q 0 168 110 100 Q 0 150 -110 100 Z" fill={C.skinShade} />
-        </g>
+        <ellipse cx={0} cy={0} rx={RIG.skullR + 2} ry={RIG.skullR} fill={C.skinShade} />
+        <ellipse cx={-16 + L.chinX * 0.2} cy={-14} rx={RIG.skullR - 6} ry={RIG.skullR - 8} fill={C.skin} />
       </g>
       {L.eyeL && (
         <g transform={placeX(-RIG.eyeX, L.eyeL, RIG.eyeY)}>
