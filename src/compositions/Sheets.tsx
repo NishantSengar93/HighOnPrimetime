@@ -103,7 +103,7 @@ export const TurnaroundSheet: React.FC = () => (
 /** Hair-only preview: head + shoulders in all three views, plus two expressions, before rig sign-off. */
 export const HairPreview: React.FC = () => (
   <AbsoluteFill style={{ backgroundColor: sheetColors.paper }}>
-    <Title text="Hair preview — revision 3" sub="Windswept messy mop after the original turnaround · face and body unchanged" />
+    <Title text="Hair preview — revision 4" sub="Very low volume · oiled · clean side parting · ~22 comb strands · face and body unchanged" />
     <div style={{ display: "grid", gridTemplateColumns: "repeat(5, 1fr)", padding: "10px 30px" }}>
       {(
         [
