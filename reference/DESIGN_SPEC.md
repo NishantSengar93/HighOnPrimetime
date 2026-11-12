@@ -56,14 +56,14 @@ backgrounds**; cream `#FDF4E3` is used only on reference/model sheets. Character
 
 ## 2. The Anchor — permanent design (must never change between episodes)
 
-### 2.1 Proportions (measured from front turnaround)
-- Total height ≈ **2.4 heads** (the skull circle is the unit).
-- Head: near-perfect circle, slightly wider at cheeks, **no visible neck** — chin sits on the collar.
-- Hair adds ~0.35 head above the skull and spills outward ~0.2 head on each side.
-- Torso (blazer): ~0.75 head tall, ~0.7 head wide, short boxy blazer ending at the hip.
-- Legs: ~0.9 head, thin black sticks, feet close together.
-- Arms: thin navy blazer sleeves (black outline) ending in black gloved hands; hands reach the
-  hip/upper thigh at rest.
+### 2.1 Proportions (revision 1 — oversized-head stick figure)
+- Skull circle (r 150) is the unit. Head (incl. hair) ≈ 50 % of total height; the head is always
+  the dominant visual feature. Total height ≈ 2.1 skulls.
+- **No visible neck**: the chin overlaps the collar by ~20 units.
+- Torso: tiny simplified blazer block, ~0.5 skull tall × ~0.43 skull wide, with only a shirt V,
+  red tie, two lapel lines and one button.
+- Arms: thin line-art sleeves (navy, black outline, ~15 units total) ending in black gloved hands.
+- Legs: thin black lines (~9 units), oversized rounded shoes.
 - **Stick-figure rule (locked):** oversized head, tiny torso, thin limbs. Never realistic human
   proportions, in any pose.
 
@@ -80,6 +80,10 @@ backgrounds**; cream `#FDF4E3` is used only on reference/model sheets. Character
 - **Nose**: none (implied by eye bridge).
 - **Mouth (neutral)**: short flat line, slightly downturned. No lips.
 - **Ears**: small, mostly hidden by hair.
+
+- **Signature default eye (revision 1):** pink half-lidded eyes, lids drooping toward the outer
+  corners, pupils slightly unfocused (drifting apart), faint vein flicks, soft under-eye bags.
+  Slow deliberate blinks (≈ 8 frames down, 4–8 hold, 9–13 up). Vacant, unimpressed.
 
 ### 2.3 Hair (C1 — neatly combed, stylised)
 - Colour: `#2A1D15` base, `#4A3426` comb-line highlights, `#110D0A` shadow.
@@ -180,8 +184,8 @@ shots.
 | LED row | 262–290 | 5 bulbs (colour follows mood) |
 | **LED screen** | 290–842 (content 330–802, x 120–960, 16:9) | coral + sky-blue double bezel, yellow tabs — **episode content slot** |
 | Back wall | 842–1290 | purple steps, side pillars, side monitors (content slots, cropped at edges), small desk monitors, plants |
-| Anchor | head centre ≈ 1046, hair top ≈ 771 | scale 1.1 (head ≈ 330 px wide); overlaps screen bottom ≈ 70 px |
-| **Desk** | 1313–1630 | master multicolour desk, glass top, **blank yellow front panel** (branding slot) |
+| Anchor | head centre ≈ 1059, hair top ≈ 740 | scale 1.27 (head ≈ 385 px wide, +17 %); neck at 1222; overlaps screen content bottom ≈ 60 px |
+| **Desk** | 1398–1715 (centre 1450) | master multicolour desk, glass top, **blank yellow front panel** (branding slot) |
 | Floor | 1290–1920 | blue perspective tiles + soft reflections |
 
 Bottom 300 px and the right edge are covered by Shorts UI — no key content there.

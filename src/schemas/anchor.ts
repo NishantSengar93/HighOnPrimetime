@@ -20,6 +20,10 @@ export const eyeSchema = z.object({
   lookY: z.number().min(-1).max(1).default(0),
   /** Degrees. Positive = inner corner lower (angry), negative = sad/droopy outer. */
   lidTilt: z.number().min(-40).max(40).default(0),
+  /** 0..1 pupils drift slightly apart (vacant, unfocused stare). */
+  unfocus: z.number().min(0).max(1).default(0),
+  /** 0..1 strength of the sleep-deprived under-eye bags. */
+  bags: z.number().min(0).max(1).default(0),
 });
 export type EyeSpec = z.infer<typeof eyeSchema>;
 

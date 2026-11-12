@@ -66,9 +66,9 @@ export const stroke = {
   silhouette: 8,
   interior: 5,
   feature: 7,
-  limbOutline: 26,
-  limbFill: 15,
-  legWidth: 15,
+  limbOutline: 15,
+  limbFill: 8,
+  legWidth: 9,
   /** Newsroom outlines in canvas px (1080 wide). */
   set: 7,
 } as const;

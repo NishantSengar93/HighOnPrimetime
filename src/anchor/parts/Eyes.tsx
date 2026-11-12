@@ -78,7 +78,7 @@ export const Eye: React.FC<Props> = ({ spec, side, blink = 0 }) => {
     );
   }
   const pr = 12 * spec.pupil;
-  const lookX = spec.lookX * rx * 0.45;
+  const lookX = spec.lookX * rx * 0.45 + side * spec.unfocus * 7;
   const centreY = spec.lookY * ry * 0.4;
   const pupilY = Math.min(Math.max(centreY, lidY + pr * 0.45), ry - pr - 2);
   const closed = open < 0.04;
@@ -145,6 +145,16 @@ export const Eye: React.FC<Props> = ({ spec, side, blink = 0 }) => {
       <g clipPath={`url(#${id}-below)`}>
         <ellipse cx={0} cy={0} rx={rx} ry={ry} fill="none" stroke={C.outline} strokeWidth={stroke.feature} />
       </g>
+      {spec.bags > 0 && (
+        <path
+          d={`M ${-rx * 0.62} ${ry + 9} Q 0 ${ry + 22} ${rx * 0.62} ${ry + 9}`}
+          fill="none"
+          stroke={mixColor(C.skin, C.eyeBloodshot, 0.45)}
+          strokeWidth={4}
+          strokeLinecap="round"
+          opacity={spec.bags}
+        />
+      )}
     </g>
   );
 };

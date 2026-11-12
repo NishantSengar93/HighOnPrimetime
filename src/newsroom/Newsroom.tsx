@@ -15,9 +15,16 @@ export const CANVAS = { width: 1080, height: 1920 } as const;
 
 /** Content area of the LED screen (16:9). Episode content is drawn inside this rect. */
 export const SCREEN = { x: 120, y: 330, width: 840, height: 472 } as const;
-export const DESK_POS = { x: 540, y: 1365 } as const;
-/** Anchor placement behind the desk: feet origin + scale (rig units → px). */
-export const ANCHOR_PLACEMENT = { x: 540, y: 1365 - 150 * 1.1 + 420 * 1.1, scale: 1.1 } as const;
+export const DESK_POS = { x: 540, y: 1450 } as const;
+/**
+ * Anchor placement behind the desk: feet origin + scale (rig units → px).
+ * Revision 1 framing: head ≈ 380 px wide (+15%), neck at y 1222, face fully clear of the desk.
+ */
+const ANCHOR_SCALE = 1.27;
+const ANCHOR_NECK_Y = 1222;
+export const ANCHOR_PLACEMENT = { x: 540, y: ANCHOR_NECK_Y + 350 * ANCHOR_SCALE, scale: ANCHOR_SCALE } as const;
+/** Desk centre expressed in the anchor's rig units (used to place the desk on model sheets). */
+export const DESK_IN_RIG = { y: (DESK_POS.y - ANCHOR_PLACEMENT.y) / ANCHOR_SCALE, scale: 1 / ANCHOR_SCALE } as const;
 export const SIDE_MONITORS = {
   left: { x: -70, y: 430, width: 150, height: 330 },
   right: { x: 1000, y: 430, width: 150, height: 330 },
@@ -39,6 +46,8 @@ export type NewsroomProps = {
   mood?: Mood;
   /** Frame number, for subtle light shimmer. */
   frame?: number;
+  /** Desk displacement in px (desk-bang jolt). */
+  deskJolt?: number;
 };
 
 const Glow: React.FC<{ id: string; color: string }> = ({ id, color }) => (
@@ -131,6 +140,7 @@ export const Newsroom: React.FC<NewsroomProps> = ({
   anchorOverDesk,
   mood = "normal",
   frame = 0,
+  deskJolt = 0,
 }) => {
   const id = useSafeId("nr");
   const m = MOOD_OVERLAY[mood];
@@ -300,7 +310,7 @@ export const Newsroom: React.FC<NewsroomProps> = ({
       {anchor}
 
       {/* ---------------- desk */}
-      <g transform={`translate(${DESK_POS.x} ${DESK_POS.y})`}>
+      <g transform={`translate(${DESK_POS.x} ${DESK_POS.y + deskJolt})`}>
         <Desk panel={deskPanel} />
       </g>
 

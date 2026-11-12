@@ -5,57 +5,27 @@ import type { HandShape } from "../../schemas/anchor";
 
 /* ------------------------------------------------------------------ torso */
 
-/** Blazer, shirt and tie in torso-local coordinates (neck = 0,0; hips = 0,200). */
+/**
+ * Simplified stick-figure torso (revision 1): a small blazer block, shirt V and tie only.
+ * Torso-local coordinates: neck = 0,0; hips = 0,150.
+ */
 export const Torso: React.FC<{ breath?: number }> = ({ breath = 0 }) => {
-  const s = 1 + breath * 0.015;
+  const s = 1 + breath * 0.02;
+  const o = { stroke: C.outline, strokeLinejoin: "round" as const };
   return (
     <g transform={`translate(0 ${RIG.hipY}) scale(${s} ${s}) translate(0 ${-RIG.hipY})`}>
-      {/* blazer body */}
       <path
-        d="M -58 0 L -94 8 Q -110 12 -108 34 L -100 186 Q -98 202 -82 202 L 82 202 Q 98 202 100 186 L 108 34 Q 110 12 94 8 L 58 0 Z"
+        d="M -40 0 L -58 8 Q -66 12 -64 26 L -56 140 Q -54 150 -44 150 L 44 150 Q 54 150 56 140 L 64 26 Q 66 12 58 8 L 40 0 Z"
         fill={C.blazer}
-        stroke={C.outline}
-        strokeWidth={stroke.silhouette}
-        strokeLinejoin="round"
+        {...o}
+        strokeWidth={stroke.silhouette - 1}
       />
-      {/* fold shade on the right */}
-      <path d="M 70 40 L 100 30 L 96 190 Q 94 196 84 196 L 74 196 Z" fill={C.blazerShade} />
-      {/* shirt V */}
-      <path d="M -40 0 L 0 98 L 40 0 Z" fill={C.shirt} stroke={C.outline} strokeWidth={stroke.interior} strokeLinejoin="round" />
-      {/* collar points */}
-      <path d="M -40 0 L -10 0 L -24 26 Z" fill={C.shirt} stroke={C.outline} strokeWidth={4} strokeLinejoin="round" />
-      <path d="M 40 0 L 10 0 L 24 26 Z" fill={C.shirt} stroke={C.outline} strokeWidth={4} strokeLinejoin="round" />
-      {/* tie */}
-      <path d="M -10 6 L 10 6 L 7 22 L -7 22 Z" fill={C.tie} stroke={C.outline} strokeWidth={4} strokeLinejoin="round" />
-      <path
-        d="M -7 22 L 7 22 L 14 132 L 0 150 L -14 132 Z"
-        fill={C.tie}
-        stroke={C.outline}
-        strokeWidth={4}
-        strokeLinejoin="round"
-      />
-      <path d="M 2 26 L 9 128 L 0 140 Z" fill={C.tieShade} />
-      {/* lapels */}
-      <path
-        d="M -40 0 L -58 0 L -66 36 L -50 46 L -6 108 L 0 98 Z"
-        fill={C.blazerLight}
-        stroke={C.outline}
-        strokeWidth={stroke.interior}
-        strokeLinejoin="round"
-      />
-      <path
-        d="M 40 0 L 58 0 L 66 36 L 50 46 L 6 108 L 0 98 Z"
-        fill={C.blazerLight}
-        stroke={C.outline}
-        strokeWidth={stroke.interior}
-        strokeLinejoin="round"
-      />
-      {/* closure + buttons + pocket */}
-      <path d="M 0 104 L 0 200" stroke={C.outline} strokeWidth={4} />
-      <circle cx={-10} cy={132} r={5} fill={C.outline} />
-      <circle cx={-10} cy={166} r={5} fill={C.outline} />
-      <path d="M -88 140 L -50 138" stroke={C.outline} strokeWidth={4} strokeLinecap="round" />
-      <path d="M 52 74 L 80 72" stroke={C.outline} strokeWidth={4} strokeLinecap="round" />
+      <path d="M 44 20 L 60 16 L 54 140 Q 52 146 44 146 Z" fill={C.blazerShade} />
+      <path d="M -28 0 L 0 64 L 28 0 Z" fill={C.shirt} {...o} strokeWidth={4} />
+      <path d="M -7 4 L 7 4 L 5 15 L -5 15 Z" fill={C.tie} {...o} strokeWidth={3} />
+      <path d="M -5 15 L 5 15 L 10 84 L 0 96 L -10 84 Z" fill={C.tie} {...o} strokeWidth={3} />
+      <path d="M -28 0 L -40 24 L -2 72 M 28 0 L 40 24 L 2 72" fill="none" stroke={C.outline} strokeWidth={4} strokeLinejoin="round" />
+      <circle cx={-8} cy={108} r={4} fill={C.outline} />
     </g>
   );
 };
@@ -123,11 +93,11 @@ export const Hand: React.FC<{ shape: HandShape; side: -1 | 1 }> = ({ shape, side
       // knuckles face the viewer; the index finger juts up and out toward the lens
       return (
         <g transform="rotate(180) translate(0 -46)">
-          <rect x={-30} y={0} width={60} height={50} rx={22} fill={g} />
+          <rect x={-30} y={0} width={60} height={50} rx={22} fill={g} stroke={C.gloveLine} strokeWidth={3} />
           <path {...gloveLine} strokeWidth={4} d="M -16 36 L -16 48 M 0 36 L 0 49 M 16 36 L 16 48" />
-          <path d="M -26 12 C -42 14 -44 32 -28 36" fill={g} />
-          <rect x={-13} y={-34} width={26} height={44} rx={13} fill={g} />
-          <ellipse cx={0} cy={-26} rx={9} ry={7} fill="#4A4A4A" />
+          <path d="M -26 12 C -42 14 -44 32 -28 36" fill={g} stroke={C.gloveLine} strokeWidth={3} />
+          <rect x={-13} y={-36} width={26} height={46} rx={13} fill={g} stroke={C.gloveLine} strokeWidth={3} />
+          <ellipse cx={0} cy={-27} rx={9} ry={7} fill="#5A5A5A" />
         </g>
       );
   }
@@ -167,7 +137,7 @@ const ArmChain: React.FC<ArmDrawProps & { pass: "outline" | "fill" | "hand" }> =
         {pass === "hand" && (
           <g transform={`translate(0 ${RIG.foreArm})`}>
             {/* shirt cuff */}
-            <rect x={-10} y={-8} width={20} height={9} rx={3} fill={C.shirt} stroke={C.outline} strokeWidth={3} />
+            <rect x={-8} y={-6} width={16} height={7} rx={3} fill={C.shirt} stroke={C.outline} strokeWidth={2.5} />
             <g transform={`rotate(${handRot}) scale(${handScale})`}>
               <Hand shape={handShape} side={side} />
             </g>

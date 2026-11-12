@@ -4,6 +4,7 @@ import { Anchor } from "../anchor/Anchor";
 import { EXPRESSIONS, EXPRESSION_NAMES } from "../anchor/expressions";
 import { POSES, POSE_EXPRESSION, POSE_NAMES } from "../anchor/poses";
 import { Desk } from "../newsroom/Desk";
+import { DESK_IN_RIG } from "../newsroom/Newsroom";
 import { sheetColors } from "../theme";
 
 /** Model sheets for review. Cream paper is used ONLY on sheets (C8). */
@@ -28,7 +29,7 @@ export const ExpressionSheet: React.FC = () => (
     <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 10, padding: "10px 40px" }}>
       {EXPRESSION_NAMES.map((name) => (
         <div key={name} style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
-          <svg width={520} height={430} viewBox="-300 -840 600 500">
+          <svg width={520} height={430} viewBox="-300 -760 600 500">
             <Anchor pose={POSES.idle} expression={EXPRESSIONS[name]} />
           </svg>
           <div style={{ ...label, fontSize: 30 }}>{name}</div>
@@ -50,13 +51,13 @@ export const PoseSheet: React.FC = () => (
         const atDesk = DESK_POSES.has(name);
         return (
           <div key={name} style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
-            <svg width={560} height={630} viewBox="-560 -900 1120 1260">
+            <svg width={560} height={600} viewBox="-500 -800 1000 1070">
               {atDesk ? (
                 <>
                   <g transform="translate(0 0)">
                     <Anchor pose={p} expression={e} pass="main" showLegs={false} />
                   </g>
-                  <g transform="translate(0 -270) scale(0.91)">
+                  <g transform={`translate(0 ${DESK_IN_RIG.y}) scale(${DESK_IN_RIG.scale})`}>
                     <Desk />
                   </g>
                   <Anchor pose={p} expression={e} pass="overDesk" />

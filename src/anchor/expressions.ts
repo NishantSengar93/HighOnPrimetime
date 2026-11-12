@@ -3,14 +3,16 @@ import type { BrowSpec, ExpressionSpec, EyeSpec, Extra, MouthShape } from "../sc
 /** Signature default eye: subtly pink, droopy, half-lidded (DESIGN_SPEC C3). */
 export const DEFAULT_EYE: EyeSpec = {
   kind: "open",
-  open: 0.5,
-  tint: 0.35,
+  open: 0.46,
+  tint: 0.42,
   scale: 1,
   roundness: 1,
-  pupil: 1,
+  pupil: 0.9,
   lookX: 0,
-  lookY: 0,
-  lidTilt: 0,
+  lookY: 0.1,
+  lidTilt: -7,
+  unfocus: 0.55,
+  bags: 0.7,
 };
 export const DEFAULT_BROW: BrowSpec = { y: 0, angle: 4, arch: 0 };
 
@@ -34,14 +36,14 @@ const expr = (
 export const EXPRESSIONS = {
   neutral: expr({}, {}, "flat"),
   shocked: expr(
-    { both: { open: 1, tint: 0, roundness: 1.35, scale: 1.15, pupil: 0.6 } },
+    { both: { open: 1, tint: 0, roundness: 1.35, scale: 1.15, pupil: 0.6, lidTilt: 0, unfocus: 0, bags: 0.3 } },
     { both: { y: -30, angle: -8, arch: 6 } },
     "o_big",
     ["shockTicks"],
   ),
-  angry: expr({ both: { open: 0.48, tint: 0.45, lidTilt: 20 } }, { both: { y: 8, angle: 22 } }, "shout", ["anger"]),
+  angry: expr({ both: { open: 0.48, tint: 0.5, lidTilt: 20, unfocus: 0, lookY: 0 } }, { both: { y: 8, angle: 22 } }, "shout", ["anger"]),
   sarcastic: expr(
-    { both: { open: 0.4, lookX: 0.7 } },
+    { both: { open: 0.4, lookX: 0.7, unfocus: 0.15 } },
     { l: { y: 2, angle: 6 }, r: { y: -18, angle: -10, arch: 6 } },
     "smirk",
   ),
@@ -49,8 +51,8 @@ export const EXPRESSIONS = {
   laughing: expr({ both: { kind: "happy" } }, { both: { y: -16, angle: -6, arch: 8 } }, "laugh", ["laughTicks"]),
   confused: expr(
     {
-      l: { open: 0.95, tint: 0, roundness: 1.25, scale: 1.12, pupil: 0.75, lookX: 0.4, lookY: -0.7 },
-      r: { open: 0.8, tint: 0, roundness: 1.1, scale: 0.86, pupil: 0.75, lookX: 0.4, lookY: -0.7 },
+      l: { open: 0.95, tint: 0, roundness: 1.25, scale: 1.12, pupil: 0.75, lookX: 0.4, lookY: -0.7, lidTilt: 0, unfocus: 0 },
+      r: { open: 0.8, tint: 0, roundness: 1.1, scale: 0.86, pupil: 0.75, lookX: 0.4, lookY: -0.7, lidTilt: 0, unfocus: 0 },
     },
     { l: { y: -24, angle: -8 }, r: { y: 8, angle: 12 } },
     "o_small",
@@ -58,7 +60,7 @@ export const EXPRESSIONS = {
   ),
   /** Optional extreme reaction (C3): wide, strongly pink, veins — no tongue, no manic grin. */
   bloodshot: expr(
-    { both: { open: 1, tint: 1, roundness: 1.25, scale: 1.12, pupil: 0.5 } },
+    { both: { open: 1, tint: 1, roundness: 1.25, scale: 1.12, pupil: 0.5, lidTilt: 0, unfocus: 0.3 } },
     { l: { y: -24, angle: -4 }, r: { y: -14, angle: 2 } },
     "grimace",
   ),
@@ -69,7 +71,7 @@ export const EXPRESSIONS = {
     "frown",
   ),
   scheming: expr(
-    { both: { open: 0.34, tint: 0.45, lidTilt: 16, lookX: -0.45 } },
+    { both: { open: 0.34, tint: 0.45, lidTilt: 16, lookX: -0.45, unfocus: 0.1 } },
     { both: { y: 6, angle: 18 } },
     "grin_teeth",
   ),

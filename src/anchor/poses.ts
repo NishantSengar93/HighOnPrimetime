@@ -3,9 +3,10 @@ import type { ExpressionName } from "./expressions";
 import { lerp } from "../utils/math";
 
 /**
- * Pose presets (DESIGN_SPEC §4). Arm targets are wrist positions in torso-local rig units:
- * neck = (0,0), shoulders = (±92, 24), hips = (0, 200), head centre = (0, -140).
- * In the newsroom the desk surface sits at torso-local y ≈ 150.
+ * Pose presets (DESIGN_SPEC §4, revision 1 proportions). Arm targets are wrist positions in
+ * torso-local rig units: neck = (0,0), shoulders = (±54, 16), hips = (0, 150),
+ * head centre = (0, -128). In the newsroom the desk surface sits at torso-local y ≈ 150, so
+ * gesture hands stay above y ≈ 100 to remain visible.
  */
 
 const arm = (target: [number, number], p: Partial<ArmSpec> = {}): ArmSpec => ({
@@ -37,13 +38,13 @@ export const DESK_Y = 150;
 
 export const POSES = {
   idle: pose({
-    armL: arm([-104, 226]),
-    armR: arm([104, 226]),
+    armL: arm([-66, 194]),
+    armR: arm([66, 194]),
   }),
   talking: pose({
     headTilt: 4,
-    armL: arm([-22, 92], { hand: "flat", handRot: -10, layer: "front", elbow: "down" }),
-    armR: arm([196, 64], { hand: "open", handRot: -40, elbow: "down" }),
+    armL: arm([-12, 62], { hand: "flat", handRot: -20, layer: "front", elbow: "down" }),
+    armR: arm([138, 30], { hand: "open", handRot: -40, elbow: "down" }),
   }),
   point_left: pose({
     lean: -7,
@@ -51,56 +52,82 @@ export const POSES = {
     headTilt: -6,
     legL: 18,
     legR: 8,
-    armL: arm([-330, 14], { hand: "point" }),
-    armR: arm([66, 170], { hand: "fist", elbow: "out" }),
+    armL: arm([-300, 8], { hand: "point" }),
+    armR: arm([40, 128], { hand: "fist", elbow: "out" }),
   }),
   point_camera: pose({
     forward: 0.35,
-    headTilt: 3,
-    armR: arm([40, 40], { hand: "point_camera", handScale: 1.6, layer: "front", elbow: "out" }),
-    armL: arm([-66, 170], { hand: "fist", elbow: "out" }),
+    headTilt: -4,
+    armR: arm([118, 24], { hand: "point_camera", handScale: 1.4, layer: "front", elbow: "down" }),
+    armL: arm([-40, 128], { hand: "fist", elbow: "out" }),
   }),
   lean_forward: pose({
     forward: 1,
     headDy: 8,
-    armL: arm([-176, DESK_Y], { hand: "flat", handRot: -4, layer: "overDesk" }),
-    armR: arm([176, DESK_Y], { hand: "flat", handRot: 4, layer: "overDesk" }),
+    armL: arm([-132, DESK_Y], { hand: "flat", handRot: -4, layer: "overDesk" }),
+    armR: arm([132, DESK_Y], { hand: "flat", handRot: 4, layer: "overDesk" }),
   }),
   shrug: pose({
     headTilt: -7,
-    armL: arm([-188, 34], { hand: "open", handRot: 150, elbow: "down" }),
-    armR: arm([188, 34], { hand: "open", handRot: -150, elbow: "down" }),
+    armL: arm([-132, 18], { hand: "open", handRot: 150, elbow: "down" }),
+    armR: arm([132, 18], { hand: "open", handRot: -150, elbow: "down" }),
     effects: ["motionTicks"],
   }),
   facepalm: pose({
-    headTilt: 9,
-    headDx: 4,
-    armR: arm([44, -92], { hand: "flat", handRot: 25, layer: "front", elbow: "out" }),
-    armL: arm([-66, 170], { hand: "fist", elbow: "out" }),
+    headTilt: 10,
+    headDx: 6,
+    armR: arm([40, -84], { hand: "flat", handRot: -25, layer: "front", elbow: "out" }),
+    armL: arm([-40, 128], { hand: "fist", elbow: "out" }),
   }),
   desk_bang: pose({
     lean: 5,
-    forward: 0.6,
-    armR: arm([150, DESK_Y], { hand: "fist", layer: "overDesk", elbow: "up" }),
-    armL: arm([-168, DESK_Y], { hand: "flat", layer: "overDesk" }),
+    forward: 0.7,
+    armR: arm([104, DESK_Y], { hand: "fist", layer: "overDesk", elbow: "up" }),
+    armL: arm([-124, DESK_Y], { hand: "flat", layer: "overDesk" }),
     effects: ["impact"],
   }),
   laugh: pose({
     lean: -8,
-    headTilt: -10,
-    armL: arm([-6, 150], { hand: "flat", handRot: 70, layer: "front", elbow: "down" }),
-    armR: arm([112, 222]),
+    headTilt: -12,
+    armL: arm([-4, 92], { hand: "flat", handRot: 70, layer: "front", elbow: "down" }),
+    armR: arm([118, DESK_Y], { hand: "flat", layer: "overDesk" }),
     effects: ["motionTicks"],
   }),
   deadpan: pose({
     seated: true,
-    armL: arm([70, 58], { hand: "fist", layer: "front", elbow: "down" }),
-    armR: arm([-70, 50], { hand: "fist", layer: "front", elbow: "down" }),
+    armL: arm([44, 62], { hand: "fist", layer: "front", elbow: "down" }),
+    armR: arm([-44, 56], { hand: "fist", layer: "front", elbow: "down" }),
+  }),
+  /* ---- in-between key poses used by animations (not standalone sheet poses) */
+  bang_windup: pose({
+    lean: -6,
+    headTilt: -8,
+    headDy: -6,
+    armR: arm([178, -96], { hand: "fist", layer: "front", elbow: "down", handScale: 1.15 }),
+    armL: arm([-124, DESK_Y], { hand: "flat", layer: "overDesk" }),
+  }),
+  recoil: pose({
+    headDy: -14,
+    headTilt: -4,
+    armL: arm([-126, -34], { hand: "open", handRot: 165, elbow: "down" }),
+    armR: arm([126, -34], { hand: "open", handRot: -165, elbow: "down" }),
   }),
 } satisfies Record<string, PoseSpec>;
 
 export type PoseName = keyof typeof POSES;
-export const POSE_NAMES = Object.keys(POSES) as PoseName[];
+/** Poses shown on the model sheet (the inventory). */
+export const POSE_NAMES: PoseName[] = [
+  "idle",
+  "talking",
+  "point_left",
+  "point_camera",
+  "lean_forward",
+  "shrug",
+  "facepalm",
+  "desk_bang",
+  "laugh",
+  "deadpan",
+];
 
 /** Default expression that pairs with each pose on model sheets. */
 export const POSE_EXPRESSION: Record<PoseName, ExpressionName> = {
@@ -114,6 +141,8 @@ export const POSE_EXPRESSION: Record<PoseName, ExpressionName> = {
   desk_bang: "angry",
   laugh: "laughing",
   deadpan: "neutral",
+  bang_windup: "angry",
+  recoil: "shocked",
 };
 
 const lerpArm = (a: ArmSpec, b: ArmSpec, t: number): ArmSpec => ({

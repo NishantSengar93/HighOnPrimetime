@@ -1,22 +1,23 @@
 /**
  * Rig geometry in "rig units". Origin = between the feet; y grows downward (SVG).
- * Skull radius 150 is the unit everything else is proportioned from (DESIGN_SPEC §2.1).
+ * Skull radius 150 is the unit (DESIGN_SPEC §2.1, revision 1: stick-figure proportions —
+ * the head dominates, the torso is a small simple block, limbs are thin lines).
  */
 export const RIG = {
   skullR: 150,
-  /** Head centre relative to the neck pivot. */
-  headCenterY: -140,
+  /** Head centre relative to the neck pivot. The chin overlaps the collar: no visible neck. */
+  headCenterY: -128,
   /** Neck pivot (top of torso) relative to the feet. */
-  neckY: -420,
-  torsoH: 200,
+  neckY: -350,
+  torsoH: 150,
   /** Hip line relative to the neck (torso-local). */
-  hipY: 200,
-  shoulderX: 92,
-  shoulderY: 24,
-  upperArm: 110,
-  foreArm: 102,
-  hipX: 36,
-  leg: 214,
+  hipY: 150,
+  shoulderX: 54,
+  shoulderY: 16,
+  upperArm: 96,
+  foreArm: 90,
+  hipX: 22,
+  leg: 196,
   /** Eye centres in head-local coordinates. */
   eyeX: 60,
   eyeY: 8,
@@ -24,9 +25,8 @@ export const RIG = {
   eyeRy: 36,
   browY: -54,
   mouthY: 80,
-  /** How far a seated anchor drops (legs hidden behind the desk). */
   seatedDrop: 0,
 } as const;
 
 /** Bounding box of a standing anchor, used for framing (rig units). */
-export const RIG_BOUNDS = { minX: -260, maxX: 260, minY: -830, maxY: 30 } as const;
+export const RIG_BOUNDS = { minX: -250, maxX: 250, minY: -770, maxY: 30 } as const;
