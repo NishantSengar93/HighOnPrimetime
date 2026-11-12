@@ -1,0 +1,30 @@
+{
+  "name": "high-on-prime-time",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Local Remotion production system for High on Prime Time (Hinglish satire Shorts)",
+  "type": "module",
+  "scripts": {
+    "studio": "remotion studio",
+    "typecheck": "tsc --noEmit",
+    "sheets": "node scripts/render-sheets.mjs",
+    "rig-test": "remotion render RigTest output/rig-test.mp4"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "dependencies": {
+    "@remotion/cli": "4.0.543",
+    "@remotion/zod-types": "4.0.543",
+    "react": "19.3.1",
+    "react-dom": "19.3.1",
+    "remotion": "4.0.543",
+    "zod": "4.6.7"
+  },
+  "devDependencies": {
+    "@types/node": "26.6.6",
+    "@types/react": "19.3.0",
+    "@types/react-dom": "19.3.0",
+    "typescript": "7.0.2"
+  }
+}

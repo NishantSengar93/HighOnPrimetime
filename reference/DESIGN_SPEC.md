@@ -173,15 +173,18 @@ shots.
 
 ## 5. Newsroom (from `newsroom/newsroom-vertical-9x16.jpg`)
 
-### 5.1 Composition (1080×1920)
-| Zone | y range (approx.) | Contents |
+### 5.1 Composition (1080×1920, as built — `src/newsroom/Newsroom.tsx`)
+| Zone | y range (px) | Contents |
 |---|---|---|
-| Ceiling | 0–350 | curved red/blue ceiling bands, 4 yellow downlights, 2 spot-lights (top corners) |
-| LED row | 350–420 | 5 blue LED spot bulbs |
-| **LED screen** | 440–960 | large 16:9 screen, red→blue double bezel with yellow corner tabs, dark navy `#151A51` panel — **per-episode content goes here** |
-| Back wall | 960–1150 | purple step panels; side monitors (cropped at frame edges), plants, small desk monitors |
-| **Desk** | 1150–1580 | curved oval desk: glass top, red/blue/yellow/orange side stripes, large **yellow front panel** (blank branding slot) |
-| Floor | 1580–1920 | blue reflective tile grid with set reflections |
+| Ceiling | 0–250 | curved coral / purple / blue bands, 4 warm downlights, 2 corner spotlights |
+| LED row | 262–290 | 5 bulbs (colour follows mood) |
+| **LED screen** | 290–842 (content 330–802, x 120–960, 16:9) | coral + sky-blue double bezel, yellow tabs — **episode content slot** |
+| Back wall | 842–1290 | purple steps, side pillars, side monitors (content slots, cropped at edges), small desk monitors, plants |
+| Anchor | head centre ≈ 1046, hair top ≈ 771 | scale 1.1 (head ≈ 330 px wide); overlaps screen bottom ≈ 70 px |
+| **Desk** | 1313–1630 | master multicolour desk, glass top, **blank yellow front panel** (branding slot) |
+| Floor | 1290–1920 | blue perspective tiles + soft reflections |
+
+Bottom 300 px and the right edge are covered by Shorts UI — no key content there.
 
 ### 5.2 Palette
 | Token | Hex |
