@@ -99,3 +99,28 @@ export const TurnaroundSheet: React.FC = () => (
     </div>
   </AbsoluteFill>
 );
+
+/** Hair-only preview: head + shoulders in all three views, plus two expressions, before rig sign-off. */
+export const HairPreview: React.FC = () => (
+  <AbsoluteFill style={{ backgroundColor: sheetColors.paper }}>
+    <Title text="Hair preview — revision 3" sub="Windswept messy mop after the original turnaround · face and body unchanged" />
+    <div style={{ display: "grid", gridTemplateColumns: "repeat(5, 1fr)", padding: "10px 30px" }}>
+      {(
+        [
+          ["front", "neutral", "front"],
+          ["threeQuarter", "neutral", "three-quarter"],
+          ["side", "neutral", "side"],
+          ["front", "angry", "front · angry"],
+          ["front", "shocked", "front · shocked"],
+        ] as const
+      ).map(([view, ex, l]) => (
+        <div key={l} style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
+          <svg width={440} height={500} viewBox="-280 -790 560 640">
+            <Anchor pose={POSES.idle} expression={EXPRESSIONS[ex]} view={view} />
+          </svg>
+          <div style={{ ...label, fontSize: 28 }}>{l}</div>
+        </div>
+      ))}
+    </div>
+  </AbsoluteFill>
+);

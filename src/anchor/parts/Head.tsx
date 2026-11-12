@@ -66,19 +66,28 @@ export const Head: React.FC<Props> = ({ expression, mouth, blink = 0, hairBounce
       {L.eyeL && (
         <g transform={placeX(-RIG.eyeX, L.eyeL, RIG.eyeY)}>
           <Eye spec={expression.eyeL} side={-1} blink={blink} />
-          <Brow spec={expression.browL} side={-1} />
         </g>
       )}
       {L.eyeR && (
         <g transform={placeX(RIG.eyeX, L.eyeR, RIG.eyeY)}>
           <Eye spec={expression.eyeR} side={1} blink={blink} />
-          <Brow spec={expression.browR} side={1} />
         </g>
       )}
       <g transform={placeX(0, L.mouth, RIG.mouthY)}>
         <Mouth shape={mouth ?? expression.mouth} idPrefix={id} />
       </g>
       <Hair bounce={hairBounce} view={view} />
+      {/* brows sit on top of the fringe so raised brows are never hidden */}
+      {L.eyeL && (
+        <g transform={placeX(-RIG.eyeX, L.eyeL, RIG.eyeY)}>
+          <Brow spec={expression.browL} side={-1} />
+        </g>
+      )}
+      {L.eyeR && (
+        <g transform={placeX(RIG.eyeX, L.eyeR, RIG.eyeY)}>
+          <Brow spec={expression.browR} side={1} />
+        </g>
+      )}
       {view === "threeQuarter" && <Ear x={-118} flip={-1} />}
       {view === "side" && <Ear x={-12} flip={-1} />}
       <Extras list={expression.extras} />

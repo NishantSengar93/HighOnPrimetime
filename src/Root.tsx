@@ -5,7 +5,7 @@ import { EXPRESSIONS, EXPRESSION_NAMES, type ExpressionName } from "./anchor/exp
 import { POSES, POSE_NAMES, type PoseName } from "./anchor/poses";
 import { AnchorSvg } from "./anchor/Anchor";
 import { StudioScene } from "./compositions/StudioScene";
-import { ExpressionSheet, PoseSheet, TurnaroundSheet } from "./compositions/Sheets";
+import { ExpressionSheet, HairPreview, PoseSheet, TurnaroundSheet } from "./compositions/Sheets";
 import { RigTest } from "./compositions/RigTest";
 import { CANVAS } from "./newsroom/Newsroom";
 
@@ -55,6 +55,7 @@ export const RemotionRoot: React.FC = () => (
       height={1920}
     />
     <Still id="ExpressionSheet" component={ExpressionSheet} width={2200} height={1560} />
+    <Still id="HairPreview" component={HairPreview} width={2300} height={720} />
     <Still id="TurnaroundSheet" component={TurnaroundSheet} width={2400} height={1660} />
     <Still id="PoseSheet" component={PoseSheet} width={2900} height={1760} />
     <Composition id="RigTest" component={RigTest} durationInFrames={300} fps={30} width={CANVAS.width} height={CANVAS.height} />

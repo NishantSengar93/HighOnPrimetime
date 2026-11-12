@@ -2,81 +2,74 @@ import React from "react";
 import { anchorColors as C, stroke } from "../../theme";
 
 /**
- * Tall, messy, upward hair (hair redesign, supersedes C1's combed coif).
- * Chunky uneven locks rising from the crown in different upward directions, a gravity-defying
- * quiff, a couple of loose strands at the sides. Rounded tips — cartoon, not anime-sharp.
+ * Messy, windswept mop (hair revision 3 — matches the anchor's original turnaround reference):
+ * compact volume (~0.3 skull above the head), chunky jagged locks sweeping back toward the
+ * viewer's left, flicks flaring out at the sides, a jagged fringe high on the forehead.
  * Head-local coordinates (skull centre = 0,0, radius 150). One silhouette per view.
  */
 
 export type View = "front" | "threeQuarter" | "side";
 
-/** [x, y, cornerRadius, kind] — kind "t" = lock tip, "v" = crease between locks. */
+/** [x, y, cornerRadius, kind] — kind "t" = lock tip, "v" = notch between locks. */
 type Pt = [number, number, number, ("t" | "v" | "")?];
 
-/**
- * The locks over the crown, shared by every view so the silhouette stays recognisable.
- * Chunky, uneven, leaning in different upward directions; the tallest curls over like a quiff.
- */
-const LOCKS: Pt[] = [
-  [-190, -120, 22, "t"], // small side tuft, left
-  [-160, -150, 10, "v"],
-  [-202, -232, 34, "t"], // left lock, leaning out
-  [-122, -214, 10, "v"],
-  [-124, -332, 34, "t"], // tall lock, leaning left
-  [-64, -262, 10, "v"],
-  [-26, -394, 34, "t"], // tallest: the quiff…
-  [4, -366, 8], //          …splits into an untidy second tuft…
-  [50, -380, 22, "t"], //   …curling over to the right
-  [40, -290, 10, "v"],
-  [114, -350, 32, "t"], // right lock
-  [110, -262, 10, "v"],
-  [192, -270, 30, "t"], // shorter lock, flaring right
-  [156, -196, 10, "v"],
-  [198, -150, 20, "t"], // small side tuft, right
+/** Crown + side flicks, shared by every view (shifted for turned views) so the silhouette stays the same. */
+const TOP: Pt[] = [
+  [-182, 2, 12, "t"], // low wisp, flicking down-left
+  [-152, -40, 8, "v"],
+  [-216, -60, 16, "t"], // windswept flick, left
+  [-166, -98, 8, "v"],
+  [-228, -132, 22, "t"], // big flick, left-up
+  [-168, -160, 10, "v"],
+  [-172, -216, 28, "t"], // round upper-left lock
+  [-112, -216, 10, "v"],
+  [-96, -252, 30, "t"], // crown dome…
+  [-24, -250, 34], //       …uneven but not spiky
+  [30, -244, 22, "t"],
+  [58, -222, 8, "v"],
+  [118, -236, 22, "t"], // tuft flicking up-right
+  [132, -192, 8, "v"],
+  [186, -172, 18, "t"], // flick, right
+  [160, -128, 8, "v"],
+  [178, -84, 14, "t"],
 ];
 
 const shift = (dx: number, sx = 1) => (p: Pt): Pt => [p[0] * sx + dx, p[1], p[2], p[3]];
 
+/** Fringe: three uneven chunks falling down-left (windswept), right → left, high on the forehead. */
+const fringe = (dx: number, sx: number): Pt[] =>
+  (
+    [
+      [116, -80, 10],
+      [86, -114, 10, "v"],
+      [44, -84, 8],
+      [28, -118, 10, "v"],
+      [-22, -88, 8],
+      [-38, -122, 10, "v"],
+      [-94, -96, 8],
+      [-110, -110, 10],
+    ] as Pt[]
+  ).map(shift(dx, sx));
+
 const FRONT: Pt[] = [
-  [-148, 24, 6],
-  [-158, -40, 30],
-  [-152, -100, 24],
-  ...LOCKS,
-  [162, -110, 24],
-  [164, -40, 30],
-  [150, 24, 6],
-  // inner hairline, right → left: short uneven fringe, not swept across the forehead
-  [138, 24, 4],
-  [134, -50, 20],
-  [118, -90, 10],
-  [98, -78, 8],
-  [80, -112, 10],
-  [46, -98, 8],
-  [20, -120, 10],
-  [-14, -102, 8],
-  [-40, -122, 10],
-  [-76, -104, 8],
-  [-104, -118, 10],
-  [-128, -76, 16],
-  [-136, 24, 4],
+  [-140, 10, 6],
+  ...TOP,
+  [152, -50, 10],
+  [150, 10, 6],
+  [138, 10, 4],
+  [132, -44, 14],
+  ...fringe(0, 1),
+  [-124, -60, 14],
+  [-130, 10, 4],
 ];
 
 const THREE_QUARTER: Pt[] = [
   [-150, 40, 6],
-  [-166, -40, 30],
-  [-158, -100, 24],
-  ...LOCKS.map(shift(-14, 0.95)),
-  [146, -118, 20],
-  [140, -72, 14],
-  // face-side hairline
-  [126, -64, 8],
-  [112, -98, 10],
-  [92, -86, 8],
-  [76, -116, 10],
-  [44, -100, 8],
-  [18, -122, 10],
-  [-14, -106, 8],
-  [-46, -120, 10],
+  [-164, 10, 12],
+  ...TOP.map(shift(-16, 0.95)).filter((p) => p[0] < 150 || p[1] < -100),
+  [150, -110, 12],
+  [140, -86, 8],
+  ...fringe(30, 0.82),
   [-80, -96, 14],
   [-96, -40, 20],
   [-104, 40, 6],
@@ -84,15 +77,15 @@ const THREE_QUARTER: Pt[] = [
 
 const SIDE: Pt[] = [
   [-118, 70, 8],
-  [-160, 20, 30],
-  [-170, -60, 30],
-  [-162, -100, 24],
-  ...LOCKS.map(shift(-10)),
-  [150, -118, 14],
-  [132, -98, 8],
+  [-162, 24, 12],
+  ...TOP.map(shift(-24)).filter((p) => p[0] < 140 || p[1] < -130),
+  [150, -120, 10],
+  // fringe hanging over the front of the forehead
+  [160, -96, 10, "t"],
+  [128, -104, 6],
   [104, -94, 8],
   [80, -112, 10],
-  [50, -96, 10],
+  [50, -98, 10],
   [20, -100, 12],
   [-8, -72, 14],
   [-22, -26, 12],
@@ -102,6 +95,26 @@ const SIDE: Pt[] = [
 ];
 
 const SHAPES: Record<View, Pt[]> = { front: FRONT, threeQuarter: THREE_QUARTER, side: SIDE };
+
+/** Windswept strand lines (brown highlight) following the sweep toward the viewer's left. */
+const SWEEP: Record<View, string[]> = {
+  front: [
+    "M 120 -170 Q 20 -220 -110 -196",
+    "M 96 -140 Q -10 -176 -150 -150",
+    "M 60 -122 Q -40 -140 -176 -96",
+  ],
+  threeQuarter: [
+    "M 100 -168 Q 0 -218 -126 -196",
+    "M 80 -140 Q -24 -176 -166 -150",
+    "M 40 -124 Q -60 -140 -190 -96",
+  ],
+  side: [
+    "M 110 -170 Q 0 -220 -130 -196",
+    "M 96 -136 Q -20 -170 -176 -150",
+    "M 60 -120 Q -50 -130 -196 -96",
+    "M -40 -40 Q -110 -40 -170 -20",
+  ],
+};
 
 /** Closed polygon with each corner rounded by a quadratic curve of radius r. */
 const roundedPath = (pts: Pt[]) => {
@@ -132,28 +145,29 @@ const roundedPath = (pts: Pt[]) => {
 
 const BASE_Y = -132;
 
-/** Creases between locks (from the crown up to each valley) — gives chunky lock separation. */
+/** Short dark notches running in from each gap between locks — chunky lock separation. */
 const creases = (pts: Pt[]) =>
   pts
     .filter((p) => p[3] === "v")
-    .map(([x, y]) => `M ${x * 0.7} ${BASE_Y} Q ${x * 0.92} ${(y + BASE_Y) / 2 - 6} ${x} ${y}`)
-    .join(" ");
-
-/** Charcoal highlight streak up the inner side of each lock. */
-const highlights = (pts: Pt[]) =>
-  pts
-    .filter((p) => p[3] === "t" && p[1] < -300)
-    .map(([x, y]) => `M ${x * 0.82 - 6} ${BASE_Y - 70} Q ${x * 0.9 - 8} ${(y + BASE_Y) / 2 - 20} ${x - 4} ${y + 60}`)
+    .map(([x, y]) => {
+      const len = Math.hypot(x, y - BASE_Y) || 1;
+      const k = 34 / len;
+      return `M ${x} ${y} L ${x - x * k} ${y - (y - BASE_Y) * k}`;
+    })
     .join(" ");
 
 export const Hair: React.FC<{ bounce?: number; view?: View }> = ({ bounce = 0, view = "front" }) => {
   const pts = SHAPES[view];
-  // locks spring a little with head motion (squash/stretch from the crown), silhouette unchanged
+  // the mop springs a little with head motion (squash/stretch from the crown), silhouette unchanged
   const sy = 1 + Math.max(-0.05, Math.min(0.05, -bounce * 0.006));
   return (
     <g transform={`translate(0 ${BASE_Y}) scale(1 ${sy}) translate(0 ${-BASE_Y})`}>
       <path d={roundedPath(pts)} fill={C.hair} stroke={C.outline} strokeWidth={stroke.silhouette} strokeLinejoin="round" />
-      <path d={highlights(pts)} fill="none" stroke={C.hairHighlight} strokeWidth={8} strokeLinecap="round" opacity={0.85} />
+      <g fill="none" stroke={C.hairHighlight} strokeWidth={6} strokeLinecap="round">
+        {SWEEP[view].map((d) => (
+          <path key={d} d={d} />
+        ))}
+      </g>
       <path d={creases(pts)} fill="none" stroke={C.hairShadow} strokeWidth={5} strokeLinecap="round" />
     </g>
   );
