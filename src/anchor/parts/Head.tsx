@@ -2,6 +2,7 @@ import React from "react";
 import { anchorColors as C, stroke } from "../../theme";
 import { RIG } from "../geometry";
 import type { ExpressionSpec, MouthShape } from "../../schemas/anchor";
+import type { MouthParams } from "../mouthParams";
 import { Eye } from "./Eyes";
 import { Brow, Extras, Mouth } from "./Face";
 import { Hair, type View } from "./Hair";
@@ -11,7 +12,11 @@ type Props = {
   expression: ExpressionSpec;
   /** Overrides the expression mouth (lip-sync viseme). */
   mouth?: MouthShape;
+  /** Continuous speech mouth; overrides `mouth` and the expression's mouth when set. */
+  mouthParams?: MouthParams;
   blink?: number;
+  /** Optional separate blink for the viewer's right eye (lazy, slightly late blinks). */
+  blinkR?: number;
   hairBounce?: number;
   /** Front, three-quarter (turned toward viewer's right) or side profile (facing right). */
   view?: View;
@@ -40,7 +45,7 @@ const placeX = (fromX: number, to: { x: number; sx: number }, cy: number) =>
   `translate(${to.x} ${cy}) scale(${to.sx} 1) translate(${-fromX} ${-cy})`;
 
 /** Head in head-local coordinates (skull centre = 0,0). */
-export const Head: React.FC<Props> = ({ expression, mouth, blink = 0, hairBounce = 0, view = "front" }) => {
+export const Head: React.FC<Props> = ({ expression, mouth, mouthParams, blink = 0, blinkR, hairBounce = 0, view = "front" }) => {
   const id = useSafeId("head");
   const L = LAYOUT[view];
   return (
@@ -58,10 +63,10 @@ export const Head: React.FC<Props> = ({ expression, mouth, blink = 0, hairBounce
       </defs>
       <ellipse cx={0} cy={0} rx={RIG.skullR + 2} ry={RIG.skullR - 2} fill={C.skin} stroke={C.outline} strokeWidth={stroke.silhouette} />
       {/* soft chin shade, kept inside the skull in turned views */}
-      {/* cool crescent shading on the lower right, kept inside the skull */}
       <g clipPath={`url(#${id}-skull)`}>
-        <ellipse cx={0} cy={0} rx={RIG.skullR + 2} ry={RIG.skullR} fill={C.skinShade} />
-        <ellipse cx={-16 + L.chinX * 0.2} cy={-14} rx={RIG.skullR - 6} ry={RIG.skullR - 8} fill={C.skin} />
+        <g transform={`translate(${L.chinX} 0)`}>
+          <path d="M -110 100 Q 0 168 110 100 Q 0 150 -110 100 Z" fill={C.skinShade} />
+        </g>
       </g>
       {L.eyeL && (
         <g transform={placeX(-RIG.eyeX, L.eyeL, RIG.eyeY)}>
@@ -70,11 +75,11 @@ export const Head: React.FC<Props> = ({ expression, mouth, blink = 0, hairBounce
       )}
       {L.eyeR && (
         <g transform={placeX(RIG.eyeX, L.eyeR, RIG.eyeY)}>
-          <Eye spec={expression.eyeR} side={1} blink={blink} />
+          <Eye spec={expression.eyeR} side={1} blink={blinkR ?? blink} />
         </g>
       )}
       <g transform={placeX(0, L.mouth, RIG.mouthY)}>
-        <Mouth shape={mouth ?? expression.mouth} idPrefix={id} />
+        <Mouth shape={mouth ?? expression.mouth} idPrefix={id} params={mouthParams} />
       </g>
       <Hair bounce={hairBounce} view={view} />
       {/* brows sit on top of the fringe so raised brows are never hidden */}

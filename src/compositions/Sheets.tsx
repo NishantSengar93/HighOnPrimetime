@@ -83,14 +83,14 @@ const VIEWS = [
 /** Turnaround: head close-ups + full body in front / three-quarter / side views. */
 export const TurnaroundSheet: React.FC = () => (
   <AbsoluteFill style={{ backgroundColor: sheetColors.paper }}>
-    <Title text="High on Prime Time — Anchor turnaround" sub="Model sheet · hair redesign · tall messy upward hair" />
+    <Title text="High on Prime Time — Anchor turnaround" sub="Model sheet · pass 2 · tall messy hair of overlapping chunky locks · simplified stick-figure body" />
     <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", padding: "0 40px" }}>
       {VIEWS.map(({ view, label: l }) => (
         <div key={view} style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
-          <svg width={720} height={720} viewBox="-330 -880 660 660">
+          <svg width={720} height={720} viewBox="-360 -980 720 720">
             <Anchor pose={POSES.idle} expression={EXPRESSIONS.neutral} view={view} />
           </svg>
-          <svg width={600} height={720} viewBox="-330 -820 660 860">
+          <svg width={600} height={720} viewBox="-420 -960 840 1000">
             <Anchor pose={POSES.idle} expression={EXPRESSIONS.neutral} view={view} />
           </svg>
           <div style={{ ...label, fontSize: 34 }}>{l}</div>
@@ -100,24 +100,23 @@ export const TurnaroundSheet: React.FC = () => (
   </AbsoluteFill>
 );
 
-/** Hair + face preview (revision 5, after the user's video reference) before rig sign-off. */
+/** Hair preview (pass 2): head + shoulders in all three views plus two reactions. */
 export const HairPreview: React.FC = () => (
   <AbsoluteFill style={{ backgroundColor: sheetColors.paper }}>
-    <Title text="Hair + face preview — revision 5" sub="After the video reference · spiky navy hair · white face · bright oval eyes · body and outfit unchanged" />
-    <div style={{ display: "grid", gridTemplateColumns: "repeat(6, 1fr)", padding: "10px 20px" }}>
+    <Title text="Hair preview — pass 2" sub="Tall messy hair · overlapping chunky locks · loose strands · face and outfit unchanged" />
+    <div style={{ display: "grid", gridTemplateColumns: "repeat(5, 1fr)", padding: "10px 30px" }}>
       {(
         [
           ["front", "neutral", "front"],
           ["threeQuarter", "neutral", "three-quarter"],
           ["side", "neutral", "side"],
-          ["front", "shocked", "shocked"],
-          ["front", "smug", "smug"],
-          ["front", "crying", "worried"],
+          ["front", "angry", "front · angry"],
+          ["front", "shocked", "front · shocked"],
         ] as const
       ).map(([view, ex, l]) => (
         <div key={l} style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
-          <svg width={380} height={470} viewBox="-280 -790 560 690">
-            <Anchor pose={POSES.idle} expression={EXPRESSIONS[ex]} view={view} faceStyle="bright" />
+          <svg width={440} height={560} viewBox="-300 -900 600 760">
+            <Anchor pose={POSES.idle} expression={EXPRESSIONS[ex]} view={view} />
           </svg>
           <div style={{ ...label, fontSize: 28 }}>{l}</div>
         </div>

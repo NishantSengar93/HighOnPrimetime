@@ -55,3 +55,39 @@ export const withOffsets = (
   const brow = (x: BrowSpec): BrowSpec => ({ ...x, y: x.y - (o.browLift ?? 0) });
   return { ...e, eyeL: eye(e.eyeL), eyeR: eye(e.eyeR), browL: brow(e.browL), browR: brow(e.browR) };
 };
+
+export type FaceOffsets = {
+  /** Gaze per eye (viewer's left / right), -1..1 added to the expression's gaze. */
+  eyeL?: [number, number];
+  eyeR?: [number, number];
+  /** Brow lift per brow in rig units (positive = raised). */
+  browL?: number;
+  browR?: number;
+  /** Extra brow angle per brow in degrees (positive = inner end down). */
+  browAngleL?: number;
+  browAngleR?: number;
+  /** Lid opening added to both eyes (negative = droopier). */
+  lidOpen?: number;
+  lidOpenL?: number;
+  lidOpenR?: number;
+};
+
+const clamp = (v: number, lo: number, hi: number) => Math.max(lo, Math.min(hi, v));
+
+/** Independent per-eye and per-brow offsets (used for wandering pupils and sarcastic brows). */
+export const withFaceOffsets = (e: ExpressionSpec, o: FaceOffsets): ExpressionSpec => {
+  const eye = (x: EyeSpec, g: [number, number] | undefined, lid: number): EyeSpec => ({
+    ...x,
+    lookX: clamp(x.lookX + (g?.[0] ?? 0), -1, 1),
+    lookY: clamp(x.lookY + (g?.[1] ?? 0), -1, 1),
+    open: clamp(x.open + (o.lidOpen ?? 0) + lid, 0, 1),
+  });
+  const brow = (x: BrowSpec, lift = 0, ang = 0): BrowSpec => ({ ...x, y: x.y - lift, angle: x.angle + ang });
+  return {
+    ...e,
+    eyeL: eye(e.eyeL, o.eyeL, o.lidOpenL ?? 0),
+    eyeR: eye(e.eyeR, o.eyeR, o.lidOpenR ?? 0),
+    browL: brow(e.browL, o.browL, o.browAngleL),
+    browR: brow(e.browR, o.browR, o.browAngleR),
+  };
+};

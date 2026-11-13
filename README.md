@@ -46,7 +46,9 @@ public/               fonts, audio, graphics (Phase 3+)
 | `NewsroomEmpty` | empty set |
 | `StudioPreview` | anchor in the set; props: `pose`, `expression`, `mood` (Zod-validated) |
 | `AnchorCutout` | anchor on a transparent background (PNG) |
-| `RigTest` | 10 s animated check of blends, blinks, mouth flaps, screen + mood changes |
+| `RigTest` | v1 rig test (kept for comparison; renders with the current rig) |
+| `RigTest2` | **v2 test (pass 2):** idle + slow blink, talking + gesture, anticipation + outburst, desk bang, deadpan stillness, shock recoil, tired ending |
+| `LaughCheck` | 3 s check of the laughter motion |
 
 ## Rules
 - No final render without approval of the preview. No automatic YouTube publishing.

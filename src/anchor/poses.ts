@@ -99,6 +99,22 @@ export const POSES = {
     armR: arm([-44, 56], { hand: "fist", layer: "front", elbow: "down" }),
   }),
   /* ---- in-between key poses used by animations (not standalone sheet poses) */
+  /** Emphasis beat while talking: open hand sweeps out and up. */
+  talk_emph: pose({
+    headTilt: 7,
+    headDx: 4,
+    armL: arm([-12, 62], { hand: "flat", handRot: -20, layer: "front", elbow: "down" }),
+    armR: arm([156, -6], { hand: "open", handRot: -62, elbow: "down" }),
+  }),
+  /** Anticipation before an angry outburst: head dips, body shrinks back, fists clench at the sides. */
+  angry_windup: pose({
+    lean: -4,
+    forward: -0.22,
+    headTilt: -3,
+    headDy: 12,
+    armL: arm([-64, 178], { hand: "fist", elbow: "out" }),
+    armR: arm([64, 178], { hand: "fist", elbow: "out" }),
+  }),
   bang_windup: pose({
     lean: -6,
     headTilt: -8,
@@ -143,6 +159,8 @@ export const POSE_EXPRESSION: Record<PoseName, ExpressionName> = {
   deadpan: "neutral",
   bang_windup: "angry",
   recoil: "shocked",
+  talk_emph: "sarcastic",
+  angry_windup: "angry",
 };
 
 const lerpArm = (a: ArmSpec, b: ArmSpec, t: number): ArmSpec => ({

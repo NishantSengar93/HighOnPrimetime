@@ -32,3 +32,15 @@ export const blinkCurve = (f: number, starts: number[], down = 8, hold = 4, up =
 };
 
 const easeInOut = (t: number) => (t < 0.5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2);
+
+/**
+ * Independent, slightly uncoordinated pupil drift for the vacant stare. `amount` 0..1 scales it
+ * (1 = vacant and spaced-out, 0 = locked on target).
+ */
+export const gazeDriftEyes = (f: number, amount = 1) => {
+  const a = amount;
+  return {
+    l: [(Math.sin(f / 67) * 0.1 + Math.sin(f / 26 + 1.2) * 0.05) * a, (Math.sin(f / 51 + 0.5) * 0.06) * a] as [number, number],
+    r: [(Math.sin(f / 59 + 2.1) * 0.1 + Math.sin(f / 31 + 0.3) * 0.05) * a - 0.04 * a, (Math.sin(f / 43 + 1.7) * 0.06) * a] as [number, number],
+  };
+};

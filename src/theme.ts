@@ -4,12 +4,11 @@
  */
 export const anchorColors = {
   outline: "#0A0A0A",
-  skin: "#F4F6FA",
-  skinShade: "#C9D2E2",
-  hair: "#1B2238",
-  hairHighlight: "#5A6890",
-  hairGloss: "#9AA6C4",
-  hairShadow: "#070A14",
+  skin: "#FFEDD9",
+  skinShade: "#F6D9C2",
+  hair: "#16141A",
+  hairHighlight: "#3A3842",
+  hairShadow: "#050506",
   sclera: "#FFF6F0",
   eyePink: "#F7A093",
   eyeBloodshot: "#F1675C",
@@ -67,9 +66,9 @@ export const stroke = {
   silhouette: 8,
   interior: 5,
   feature: 7,
-  limbOutline: 15,
-  limbFill: 8,
-  legWidth: 9,
+  limbOutline: 13,
+  limbFill: 5,
+  legWidth: 8,
   /** Newsroom outlines in canvas px (1080 wide). */
   set: 7,
 } as const;

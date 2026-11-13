@@ -7,14 +7,19 @@ import { Head } from "./parts/Head";
 import { Arm, Leg, Torso } from "./parts/Body";
 import type { View } from "./parts/Hair";
 import { applyFaceStyle, type FaceStyle } from "./faceStyles";
+import type { MouthParams } from "./mouthParams";
 
 export type AnchorProps = {
   pose: PoseSpec;
   expression: ExpressionSpec;
   /** Lip-sync viseme; overrides the expression's mouth when set. */
   mouth?: MouthShape;
+  /** Continuous speech mouth (smoothly blended visemes); overrides `mouth`. */
+  mouthParams?: MouthParams;
   /** 0..1 lid closure on top of the expression (blinks). */
   blink?: number;
+  /** Separate blink for the viewer's right eye (defaults to `blink`). */
+  blinkR?: number;
   /** 0..1 breathing phase amplitude. */
   breath?: number;
   /** Small vertical head offset (talking bob), rig units. */
@@ -71,7 +76,9 @@ export const Anchor: React.FC<AnchorProps> = ({
   pose,
   expression,
   mouth,
+  mouthParams,
   blink = 0,
+  blinkR,
   breath = 0,
   headBob = 0,
   pass = "all",
@@ -136,7 +143,7 @@ export const Anchor: React.FC<AnchorProps> = ({
               <g
                 transform={`translate(${pose.headDx} ${pose.headDy + headBob}) rotate(${pose.headTilt}) translate(0 ${RIG.headCenterY})`}
               >
-                <Head expression={applyFaceStyle(expression, faceStyle)} mouth={mouth} blink={blink} hairBounce={headBob} view={view} />
+                <Head expression={applyFaceStyle(expression, faceStyle)} mouth={mouth} mouthParams={mouthParams} blink={blink} blinkR={blinkR} hairBounce={headBob} view={view} />
               </g>
               {arms("front")}
               {pose.effects.includes("motionTicks") && effects}

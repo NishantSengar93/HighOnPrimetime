@@ -89,6 +89,9 @@ export const Eye: React.FC<Props> = ({ spec, side, blink = 0 }) => {
         <clipPath id={`${id}-clip`}>
           <ellipse cx={0} cy={0} rx={rx} ry={ry} />
         </clipPath>
+        <clipPath id={`${id}-lidclip`}>
+          <ellipse cx={0} cy={0} rx={rx + 3} ry={ry + 3} />
+        </clipPath>
         {/* region below the lid: the eye outline is only drawn here, so lids read as skin, not glasses (C2) */}
         <clipPath id={`${id}-below`}>
           <rect x={-rx - 30} y={lidY} width={rx * 2 + 60} height={2 * ry + 60} transform={`rotate(${tilt} 0 ${lidY})`} />
@@ -102,6 +105,19 @@ export const Eye: React.FC<Props> = ({ spec, side, blink = 0 }) => {
       <g clipPath={`url(#${id}-clip)`}>
         <ellipse cx={0} cy={0} rx={rx} ry={ry} fill={`url(#${id}-grad)`} />
         {/* faint vein flicks from the outer corner; stronger with tint */}
+        {/* very subtle redness in the neutral eye: a faint red rim + inner-corner flush.
+            Stronger with tint, so the exaggerated bloodshot reaction still reads much redder. */}
+        <ellipse
+          cx={0}
+          cy={0}
+          rx={rx - 3}
+          ry={ry - 3}
+          fill="none"
+          stroke={C.vein}
+          strokeWidth={9}
+          opacity={0.1 + 0.55 * Math.max(0, t - 0.3)}
+        />
+        <ellipse cx={-side * rx * 0.78} cy={ry * 0.15} rx={rx * 0.28} ry={ry * 0.5} fill={C.vein} opacity={0.1 + 0.3 * t} />
         {t > 0.15 && (
           <g
             stroke={C.vein}
@@ -118,16 +134,12 @@ export const Eye: React.FC<Props> = ({ spec, side, blink = 0 }) => {
         )}
         {!closed && <circle cx={lookX} cy={pupilY} r={pr} fill={C.pupil} />}
         {!closed && pr > 6 && <circle cx={lookX + pr * 0.35} cy={pupilY - pr * 0.35} r={pr * 0.28} fill="#FFFFFF" />}
-        {/* upper lid */}
+      </g>
+      {/* upper lid: clipped to a slightly larger ellipse so no anti-aliased sclera ring shows above the lid */}
+      <g clipPath={`url(#${id}-lidclip)`}>
         <g transform={`rotate(${tilt} 0 ${lidY})`}>
           <rect x={-rx - 20} y={-ry - 60} width={rx * 2 + 40} height={lidY + ry + 60} fill={C.skin} />
-          <rect
-            x={-rx - 20}
-            y={lidY - 10}
-            width={rx * 2 + 40}
-            height={10}
-            fill={C.skinShade}
-          />
+          <rect x={-rx - 20} y={lidY - 10} width={rx * 2 + 40} height={10} fill={C.skinShade} />
         </g>
       </g>
       {/* lid line */}

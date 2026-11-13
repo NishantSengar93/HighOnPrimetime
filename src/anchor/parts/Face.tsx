@@ -2,6 +2,7 @@ import React from "react";
 import { anchorColors as C, stroke } from "../../theme";
 import { RIG } from "../geometry";
 import type { BrowSpec, Extra, MouthShape } from "../../schemas/anchor";
+import type { MouthParams } from "../mouthParams";
 
 /* ------------------------------------------------------------------ brows */
 
@@ -114,8 +115,39 @@ const MOUTHS: Record<MouthShape, (id: string) => React.ReactNode> = {
   ),
 };
 
-export const Mouth: React.FC<{ shape: MouthShape; idPrefix: string }> = ({ shape, idPrefix }) => (
-  <g transform={`translate(0 ${RIG.mouthY})`}>{MOUTHS[shape](`${idPrefix}-m-${shape}`)}</g>
+/** Continuous mouth for speech: openness, width, teeth, tongue and smirk blend smoothly. */
+export const ParamMouth: React.FC<{ p: MouthParams; idPrefix: string }> = ({ p, idPrefix }) => {
+  const hw = p.width;
+  const H = 56;
+  const T = p.open * H * 0.28;
+  const B = p.open * H;
+  const rc = -p.skew * 12; // right corner lifts for the smirk
+  const lc = p.skew * 3;
+  const d =
+    `M ${-hw} ${lc} C ${-hw * 0.5} ${-T - 4}, ${hw * 0.5} ${-T - 4 + rc * 0.3}, ${hw} ${rc} ` +
+    `C ${hw * 0.8} ${B + 3}, ${-hw * 0.8} ${B + 3}, ${-hw} ${lc} Z`;
+  const id = `${idPrefix}-pm`;
+  return (
+    <g>
+      <defs>
+        <clipPath id={id}>
+          <path d={d} />
+        </clipPath>
+      </defs>
+      <path d={d} fill={C.mouth} />
+      <g clipPath={`url(#${id})`}>
+        {p.teeth > 0.02 && <rect x={-hw - 4} y={-40} width={hw * 2 + 8} height={40 + p.teeth * 13} fill={C.teeth} />}
+        {p.tongue > 0.02 && <ellipse cx={2} cy={B * 0.82} rx={hw * 0.55} ry={Math.max(1, B * 0.3)} fill={C.tongue} opacity={p.tongue} />}
+      </g>
+      <path d={d} fill="none" {...filled} />
+    </g>
+  );
+};
+
+export const Mouth: React.FC<{ shape: MouthShape; idPrefix: string; params?: MouthParams }> = ({ shape, idPrefix, params }) => (
+  <g transform={`translate(0 ${RIG.mouthY})`}>
+    {params ? <ParamMouth p={params} idPrefix={idPrefix} /> : MOUTHS[shape](`${idPrefix}-m-${shape}`)}
+  </g>
 );
 
 /* ------------------------------------------------------------------ extras */

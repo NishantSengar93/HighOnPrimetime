@@ -60,10 +60,11 @@ backgrounds**; cream `#FDF4E3` is used only on reference/model sheets. Character
 - Skull circle (r 150) is the unit. Head (incl. hair) ≈ 50 % of total height; the head is always
   the dominant visual feature. Total height ≈ 2.1 skulls.
 - **No visible neck**: the chin overlaps the collar by ~20 units.
-- Torso: tiny simplified blazer block, ~0.5 skull tall × ~0.43 skull wide, with only a shirt V,
-  red tie, two lapel lines and one button.
-- Arms: thin line-art sleeves (navy, black outline, ~15 units total) ending in black gloved hands.
-- Legs: thin black lines (~9 units), oversized rounded shoes.
+- Torso: one plain blazer block (pass 2: no shading, collar, lapels or buttons), ~0.5 skull tall ×
+  ~0.4 skull wide, with only a shirt V and a red tie.
+- Arms: thin line-art sleeves (navy core, black outline, ~13 units total) ending in **plain black
+  mitten hands** (pass 2: circles / ovals / one-finger point; no finger lines or cuffs).
+- Legs: thin black lines (~8 units), oversized rounded shoes.
 - **Stick-figure rule (locked):** oversized head, tiny torso, thin limbs. Never realistic human
   proportions, in any pose.
 
@@ -83,19 +84,28 @@ backgrounds**; cream `#FDF4E3` is used only on reference/model sheets. Character
 
 - **Signature default eye (revision 1):** pink half-lidded eyes, lids drooping toward the outer
   corners, pupils slightly unfocused (drifting apart), faint vein flicks, soft under-eye bags.
-  Slow deliberate blinks (≈ 8 frames down, 4–8 hold, 9–13 up). Vacant, unimpressed.
+  Slow deliberate blinks (≈ 8–10 frames down, 4–6 hold, 10–12 up). Vacant, unimpressed.
+- **Redness (pass 2):** the neutral eye carries only a very faint red rim and inner-corner flush;
+  veins stay barely visible. Redness and veins scale with `tint`, so the `bloodshot` reaction
+  (tint 1) is dramatically redder.
+- **Independent eyes:** each pupil drifts on its own slow wander (never in lockstep) and the
+  viewer's-right eye blinks ~2 frames late for a lazy, spaced-out look.
 
-### 2.3 Hair (hair redesign — supersedes the combed coif)
-- Colour: near-black `#16141A`, subtle charcoal highlights `#3A3842`, crease lines `#050506`.
-- **Tall, messy, upward hair**: five chunky, uneven locks rising from the crown in different
-  upward directions, plus a small loose tuft on each side. The tallest lock is an untidy quiff
-  that splits and curls over to the right. Rounded tips — cartoon, never anime-sharp; not a
-  mohawk (full width of the head), not combed, not slicked, nothing swept across the forehead.
-  Short uneven fringe at the hairline.
-- Rises ~245 rig units above the skull (≈ 0.8 skull). The upward silhouette is the anchor's main
-  recognition feature.
-- The same lock set is used in **front, three-quarter and side** views (`src/anchor/parts/Hair.tsx`),
-  so the silhouette reads identically from every angle.
+### 2.3 Hair (pass 2 — tall messy hair, refined)
+- Colour: near-black `#16141A` (darker `#0D0C10` for the back layer), charcoal highlights `#3A3842`,
+  crease lines `#050506`.
+- **Tall, messy, upward hair** built from **12 overlapping chunky locks in three depth layers**
+  (back / middle / front), each with its own lean, length, width and curl, so the silhouette is
+  irregular and asymmetric (tallest locks right of centre, shorter ones left, curls and a short
+  stub in front) rather than an evenly notched fan. Tips are blunt and rounded; not anime-sharp,
+  not a mohawk, not combed or slicked, nothing swept across the forehead.
+- **Five loose strands** curl out of the locks (thin outlined lines), plus two low tufts at the
+  temples. Height ≈ 245 rig units above the skull — unchanged from the previous pass.
+- Each lock lags head motion by a small angle (`gain`), so the hair flutters when the head bobs.
+- Same lock set in **front, three-quarter and side** views (`src/anchor/parts/Hair.tsx`).
+- Superseded experiments (kept in git history): combed coif, windswept mop, low oiled side-part,
+  spiky navy (video reference). The video-style face is still available as `faceStyle="bright"`
+  but is **not** the default.
 
 ### 2.4 Outfit
 | Part | Colour | Notes |
@@ -263,17 +273,21 @@ with a small "SATIRE" tag. Exact tag style TBD.
 
 All bundled in `public/fonts/` (no CDN at render time).
 
-## 8. Animation style (proposal — no reference supplied)
+## 8. Animation style (pass 2 principles — implemented in `RigTest2`)
 
-- Snappy cartoon timing: poses hit in 3–5 frames with ~10% overshoot, then hold.
-- Constant idle: breathing (1.5% torso scale), blinks every 2–5 s (randomised, seeded), hair
-  bounce lagging head moves by 2 frames.
-- Talking: mouth shapes from audio alignment; small head bob on stressed syllables.
-- Camera: cuts between wide (full set) / medium (anchor + screen) / close-up (face) every 2–4 s;
-  occasional punch-in zoom on punchlines; screen-shake only on `desk_bang` / `explosion`.
-- Graphics: slide + overshoot in, 2-frame white flash on BREAKING.
-
----
+- **Anticipation → action → recovery** on every big beat (anger: 7-frame draw-back, head dips,
+  body shrinks, fists clench, jaw clenches; desk bang: fist rises and the body leans back, holds,
+  strikes in 3 frames, stays planted, slowly recovers with an exhale).
+- **Overlap:** the face follows the body by ~2 frames on shock; hair locks lag head motion;
+  damped springs (`animation/motion.ts`) drive impact, recoil and lunge.
+- **Speech:** a continuous parametric mouth (opening, width, teeth, tongue, smirk) averaged over
+  the last 5 frames glides between visemes; loud delivery widens everything.
+- **Brows:** one brow rides up while the other sinks during sarcasm, with extra flicks on
+  emphasised words.
+- **Stillness is a performance choice:** energy drops to ~0.03 during deadpan pauses (breathing
+  only); energy 2.4 during shouting.
+- **Laughter** (`LaughCheck`): shoulders pulse, head rocks back and forth, body bounces.
+- Camera punches in on outbursts/shocks (never below 1.0, so the set edge is never revealed).
 
 ## 9. Locked decisions (2026-11-12)
 

@@ -7,6 +7,7 @@ import { AnchorSvg } from "./anchor/Anchor";
 import { StudioScene } from "./compositions/StudioScene";
 import { ExpressionSheet, HairPreview, PoseSheet, TurnaroundSheet } from "./compositions/Sheets";
 import { RigTest } from "./compositions/RigTest";
+import { LaughCheck, RigTest2 } from "./compositions/RigTest2";
 import { CANVAS } from "./newsroom/Newsroom";
 
 export const studioPreviewSchema = z.object({
@@ -59,5 +60,7 @@ export const RemotionRoot: React.FC = () => (
     <Still id="TurnaroundSheet" component={TurnaroundSheet} width={2400} height={1660} />
     <Still id="PoseSheet" component={PoseSheet} width={2900} height={1760} />
     <Composition id="RigTest" component={RigTest} durationInFrames={300} fps={30} width={CANVAS.width} height={CANVAS.height} />
+    <Composition id="RigTest2" component={RigTest2} durationInFrames={300} fps={30} width={CANVAS.width} height={CANVAS.height} />
+    <Composition id="LaughCheck" component={LaughCheck} durationInFrames={90} fps={30} width={CANVAS.width} height={CANVAS.height} />
   </>
 );

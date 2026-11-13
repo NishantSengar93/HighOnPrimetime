@@ -1,4 +1,5 @@
 import type { MouthShape } from "../schemas/anchor";
+import { MOUTH_CLOSED, averageMouths, shoutify, visemeToParams, type MouthParams } from "../anchor/mouthParams";
 
 /**
  * Text → viseme track. Each character gets a slice of time (later replaced by ElevenLabs
@@ -72,4 +73,25 @@ export const stressPulse = (track: SpeechTrack, frame: number, decay = 7): numbe
     if (d >= 0 && d < decay) v = Math.max(v, 1 - d / decay);
   }
   return v;
+};
+
+/** Frame weights for smoothing the mouth: current frame counts most, recent frames fade out. */
+const MOUTH_KERNEL = [0.34, 0.26, 0.18, 0.12, 0.1];
+
+/**
+ * Smoothly blended mouth for a frame: the viseme track is averaged over the last few frames so
+ * the mouth glides between shapes instead of snapping. Returns undefined outside the track
+ * (plus a short tail so the mouth eases shut).
+ */
+export const mouthParamsAt = (track: SpeechTrack, frame: number, opts: { shout?: boolean; skew?: number } = {}): MouthParams | undefined => {
+  const tail = 6;
+  if (frame < track.keys[0].f || frame >= track.end + tail) return undefined;
+  const list = MOUTH_KERNEL.map((w, k) => {
+    const v = visemeAt(track, frame - k);
+    let p = visemeToParams(v);
+    if (opts.shout && v && v !== "closed") p = shoutify(p);
+    return { p, w };
+  });
+  const m = averageMouths(list);
+  return { ...m, skew: opts.skew ?? 0, width: m.width || MOUTH_CLOSED.width };
 };
